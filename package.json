@@ -6,6 +6,7 @@
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
     "lint:check": "eslint . --ext .ts,.tsx --max-warnings 0",
     "format": "prettier --write src/**/*.{js,ts,json}",
+    "format:check": "prettier --check src/**/*.{js,ts,json}",
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
@@ -16,14 +17,15 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
-    "prepare": "husky"
+    "prepare": "husky",
+    "pre-commit": "lint-staged"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
-      "eslint --fix",
+      "eslint --fix --max-warnings 0",
       "prettier --write"
     ],
-    "*.{js,json,md}": [
+    "*.{js,json,md,yml,yaml}": [
       "prettier --write"
     ]
   },
@@ -39,6 +41,8 @@
     "typescript-eslint": "^8.37.0"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
     "@testcontainers/postgresql": "^11.3.1",
     "@types/node": "^20.11.17",
     "@types/pg": "^8.15.4",

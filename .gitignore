@@ -4,6 +4,7 @@
 .vscode/*
 !.vscode/launch.json
 !.vscode/*.code-snippets
+!.vscode/settings.json
 .idea/workspace.xml
 .idea/usage.statistics.xml
 .idea/shelf
@@ -24,5 +25,10 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# lint-staged
+.lintstagedrc*
+
 # misc
 .DS_Store
+*.tmp
+*.temp
