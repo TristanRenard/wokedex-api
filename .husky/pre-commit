@@ -5,6 +5,3 @@ npx lint-staged
 
 echo "🧪 Exécution des tests..."
 pnpm test:run
-
-pnpm test:coverage
-git add coverage/
