@@ -32,6 +32,3 @@ lerna-debug.log*
 .DS_Store
 *.tmp
 *.temp
-
-# test
-coverage/
