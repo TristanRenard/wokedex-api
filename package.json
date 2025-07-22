@@ -1,0 +1,58 @@
+{
+  "name": "wokedex-api",
+  "type": "module",
+  "scripts": {
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:fix": "eslint . --ext .ts,.tsx --fix",
+    "lint:check": "eslint . --ext .ts,.tsx --max-warnings 0",
+    "format": "prettier --write src/**/*.{js,ts,json}",
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{js,json,md}": [
+      "prettier --write"
+    ]
+  },
+  "dependencies": {
+    "@eslint/migrate-config": "1.5.2",
+    "@hono/node-server": "^1.17.1",
+    "@typescript-eslint/eslint-plugin": "^8.37.0",
+    "@typescript-eslint/parser": "^8.37.0",
+    "drizzle-orm": "^0.44.3",
+    "globals": "^16.3.0",
+    "hono": "^4.8.5",
+    "pg": "^8.16.3",
+    "typescript-eslint": "^8.37.0"
+  },
+  "devDependencies": {
+    "@testcontainers/postgresql": "^11.3.1",
+    "@types/node": "^20.11.17",
+    "@types/pg": "^8.15.4",
+    "@vitest/ui": "^3.2.4",
+    "drizzle-kit": "^0.31.4",
+    "eslint": "^9.31.0",
+    "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.2",
+    "prettier": "^3.6.2",
+    "testcontainers": "^11.3.1",
+    "tsx": "^4.7.1",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
+  },
+  "packageManager": "pnpm@9.14.4+sha512.c8180b3fbe4e4bca02c94234717896b5529740a6cbadf19fa78254270403ea2f27d4e1d46a08a0f56c89b63dc8ebfd3ee53326da720273794e6200fcf0d184ab"
+}
