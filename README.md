@@ -14,7 +14,7 @@ Une API moderne construite avec Hono, TypeScript, et PostgreSQL pour la gestion 
 
 ## 📋 Prérequis
 
-- Node.js 20+
+- Node.js 18+
 - pnpm 9+
 - Docker et Docker Compose (pour le développement local)
 
