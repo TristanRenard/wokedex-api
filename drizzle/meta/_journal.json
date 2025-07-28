@@ -8,6 +8,27 @@
       "when": 1753176192701,
       "tag": "0000_mighty_gertrude_yorkes",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1753194539165,
+      "tag": "0001_brave_mantis",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1753227353916,
+      "tag": "0002_careless_robbie_robertson",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1753472598012,
+      "tag": "0003_numerous_squadron_sinister",
+      "breakpoints": true
     }
   ]
 }

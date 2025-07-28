@@ -8,9 +8,11 @@ import crypto from "crypto"
 
 const generateUserHash = (email: string): string => {
   const secret = process.env.USER_HASH_SECRET ?? "default-secret"
-
-  return crypto.createHmac("sha256", secret)
+  const userHash = crypto
+    .createHmac("sha256", secret)
     .update(email.toLowerCase().trim())
     .digest("hex")
+
+  return userHash
 }
 export { generateUserHash }

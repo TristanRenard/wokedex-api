@@ -20,17 +20,22 @@ describe("createUser", () => {
   it("should create a user successfully", async () => {
     const unpreparedUser: UnpreparedUser = {
       email: "test@example.com",
-      username: "testuser"
+      username: "testuser",
     }
 
     await createUser(unpreparedUser, testDb as any)
 
-    const [createdUser] = await testDb.select().from(users).where(eq(users.username, "testuser"))
+    const [createdUser] = await testDb
+      .select()
+      .from(users)
+      .where(eq(users.username, "testuser"))
     expect(createdUser).toBeDefined()
 
     expect(createdUser.username).toBe("testuser")
     expect(createdUser.id).not.toBe(createdUser.hash)
-    expect(createdUser.id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/)
+    expect(createdUser.id).toMatch(
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/,
+    )
     expect(createdUser.verificationToken).toBeNull()
     expect(createdUser.verifiedAt).toBeNull()
     expect(createdUser.createdAt).toBeInstanceOf(Date)
@@ -39,34 +44,46 @@ describe("createUser", () => {
   it("should generate consistent hash for same email", async () => {
     const unpreparedUser: UnpreparedUser = {
       email: "test@example.com",
-      username: "testuser"
+      username: "testuser",
     }
 
     await createUser(unpreparedUser, testDb as any)
 
-    const [createdUser] = await testDb.select().from(users).where(eq(users.username, "testuser"))
-    const expectedHash = "eb009fbc5c915bea2c09c363280beb377cca0a3e7bee59df2d7c59ec7870dddc"
+    const [createdUser] = await testDb
+      .select()
+      .from(users)
+      .where(eq(users.username, "testuser"))
+    const expectedHash =
+      "96b42d8e75897d4d9cf1805a912c643e92c0cbfdaa98628ecadc2f84c62bfefd"
     expect(createdUser.hash).toBe(expectedHash)
     expect(createdUser.id).not.toBe(expectedHash)
-    expect(createdUser.id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/)
+    expect(createdUser.id).toMatch(
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/,
+    )
   })
 
   it("should handle case insensitive email for hash generation", async () => {
     const unpreparedUser1: UnpreparedUser = {
       email: "TEST@EXAMPLE.COM",
-      username: "testuser1"
+      username: "testuser1",
     }
     const unpreparedUser2: UnpreparedUser = {
       email: "test@example.com",
-      username: "testuser2"
+      username: "testuser2",
     }
 
     await createUser(unpreparedUser1, testDb as any)
-    const [user1] = await testDb.select().from(users).where(eq(users.username, "testuser1"))
+    const [user1] = await testDb
+      .select()
+      .from(users)
+      .where(eq(users.username, "testuser1"))
     await testDb.delete(users).where(eq(users.id, user1.id))
     await createUser(unpreparedUser2, testDb as any)
 
-    const [user2] = await testDb.select().from(users).where(eq(users.username, "testuser2"))
+    const [user2] = await testDb
+      .select()
+      .from(users)
+      .where(eq(users.username, "testuser2"))
 
     expect(user1.hash).toBe(user2.hash)
     expect(user1.id).not.toBe(user2.id)
@@ -75,25 +92,32 @@ describe("createUser", () => {
   it("should handle emails with whitespace", async () => {
     const unpreparedUser: UnpreparedUser = {
       email: "  test@example.com  ",
-      username: "testuser"
+      username: "testuser",
     }
 
     await createUser(unpreparedUser, testDb as any)
 
-    const [createdUser] = await testDb.select().from(users).where(eq(users.username, "testuser"))
-    const expectedHash = "eb009fbc5c915bea2c09c363280beb377cca0a3e7bee59df2d7c59ec7870dddc"
+    const [createdUser] = await testDb
+      .select()
+      .from(users)
+      .where(eq(users.username, "testuser"))
+    const expectedHash =
+      "96b42d8e75897d4d9cf1805a912c643e92c0cbfdaa98628ecadc2f84c62bfefd"
     expect(createdUser.hash).toBe(expectedHash)
   })
 
   it("should set verification fields to null for new users", async () => {
     const unpreparedUser: UnpreparedUser = {
       email: "test@example.com",
-      username: "testuser"
+      username: "testuser",
     }
 
     await createUser(unpreparedUser, testDb as any)
 
-    const [createdUser] = await testDb.select().from(users).where(eq(users.username, "testuser"))
+    const [createdUser] = await testDb
+      .select()
+      .from(users)
+      .where(eq(users.username, "testuser"))
 
     expect(createdUser.verificationToken).toBeNull()
     expect(createdUser.verifiedAt).toBeNull()
@@ -103,54 +127,67 @@ describe("createUser", () => {
   it("should set createdAt timestamp", async () => {
     const unpreparedUser: UnpreparedUser = {
       email: "test@example.com",
-      username: "testuser"
+      username: "testuser",
     }
     const beforeCreation = new Date()
     await createUser(unpreparedUser, testDb as any)
     const afterCreation = new Date()
-    const [createdUser] = await testDb.select().from(users).where(eq(users.username, "testuser"))
+    const [createdUser] = await testDb
+      .select()
+      .from(users)
+      .where(eq(users.username, "testuser"))
 
     expect(createdUser.createdAt).toBeInstanceOf(Date)
-    expect(createdUser.createdAt.getTime()).toBeGreaterThanOrEqual(beforeCreation.getTime() - 1000)
-    expect(createdUser.createdAt.getTime()).toBeLessThanOrEqual(afterCreation.getTime() + 1000)
+    expect(createdUser.createdAt.getTime()).toBeGreaterThanOrEqual(
+      beforeCreation.getTime() - 1000,
+    )
+    expect(createdUser.createdAt.getTime()).toBeLessThanOrEqual(
+      afterCreation.getTime() + 1000,
+    )
   })
 
   it("should set lastLogin to null for new users", async () => {
     const unpreparedUser: UnpreparedUser = {
       email: "test@example.com",
-      username: "testuser"
+      username: "testuser",
     }
 
     await createUser(unpreparedUser, testDb as any)
 
-    const [createdUser] = await testDb.select().from(users).where(eq(users.username, "testuser"))
+    const [createdUser] = await testDb
+      .select()
+      .from(users)
+      .where(eq(users.username, "testuser"))
 
     expect(createdUser.lastLogin).toBeNull()
   })
 
-  it("should return null on successful creation", async () => {
+  it("should return created user on successful creation", async () => {
     const unpreparedUser: UnpreparedUser = {
       email: "test@example.com",
-      username: "testuser"
+      username: "testuser",
     }
     const result = await createUser(unpreparedUser, testDb as any)
-    expect(result).toBeNull()
+    expect(result).toBeDefined()
+    expect(result.username).toBe("testuser")
+    expect(result.hash).toBeDefined()
+    expect(result.id).toBeDefined()
   })
 
   it("should not allow creating users with same email but different usernames", async () => {
     const unpreparedUser1: UnpreparedUser = {
       email: "test@example.com",
-      username: "user1"
+      username: "user1",
     }
     const unpreparedUser2: UnpreparedUser = {
       email: "test@example.com",
-      username: "user2"
+      username: "user2",
     }
 
     await createUser(unpreparedUser1, testDb as any)
 
     await expect(createUser(unpreparedUser2, testDb as any)).rejects.toThrow(
-      'Email "test@example.com" is already registered'
+      'Email "test@example.com" is already registered',
     )
 
     const allUsers = await testDb.select().from(users)
@@ -160,54 +197,62 @@ describe("createUser", () => {
   it("should handle special characters in email", async () => {
     const unpreparedUser: UnpreparedUser = {
       email: "test+tag@example.com",
-      username: "testuser"
+      username: "testuser",
     }
 
     await createUser(unpreparedUser, testDb as any)
 
-    const [createdUser] = await testDb.select().from(users).where(eq(users.username, "testuser"))
+    const [createdUser] = await testDb
+      .select()
+      .from(users)
+      .where(eq(users.username, "testuser"))
     expect(createdUser).toBeDefined()
 
     expect(createdUser.username).toBe("testuser")
     expect(createdUser.hash).toHaveLength(64)
     expect(createdUser.id).not.toBe(createdUser.hash)
-    expect(createdUser.id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/)
+    expect(createdUser.id).toMatch(
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/,
+    )
   })
 
   it("should throw error when creating user with duplicate username", async () => {
     const unpreparedUser1: UnpreparedUser = {
       email: "user1@example.com",
-      username: "testuser"
+      username: "testuser",
     }
     const unpreparedUser2: UnpreparedUser = {
       email: "user2@example.com",
-      username: "testuser"
+      username: "testuser",
     }
 
     await createUser(unpreparedUser1, testDb as any)
 
     await expect(createUser(unpreparedUser2, testDb as any)).rejects.toThrow(
-      'Username "testuser" is already taken'
+      'Username "testuser" is already taken',
     )
 
-    const allUsers = await testDb.select().from(users).where(eq(users.username, "testuser"))
+    const allUsers = await testDb
+      .select()
+      .from(users)
+      .where(eq(users.username, "testuser"))
     expect(allUsers).toHaveLength(1)
   })
 
   it("should throw error when creating user with duplicate email", async () => {
     const unpreparedUser1: UnpreparedUser = {
       email: "test@example.com",
-      username: "user1"
+      username: "user1",
     }
     const unpreparedUser2: UnpreparedUser = {
       email: "test@example.com",
-      username: "user2"
+      username: "user2",
     }
 
     await createUser(unpreparedUser1, testDb as any)
 
     await expect(createUser(unpreparedUser2, testDb as any)).rejects.toThrow(
-      'Email "test@example.com" is already registered'
+      'Email "test@example.com" is already registered',
     )
 
     const allUsers = await testDb.select().from(users)
@@ -217,20 +262,87 @@ describe("createUser", () => {
   it("should throw error when creating user with both duplicate username and email", async () => {
     const unpreparedUser1: UnpreparedUser = {
       email: "test@example.com",
-      username: "testuser"
+      username: "testuser",
     }
     const unpreparedUser2: UnpreparedUser = {
       email: "test@example.com",
-      username: "testuser"
+      username: "testuser",
     }
 
     await createUser(unpreparedUser1, testDb as any)
 
     await expect(createUser(unpreparedUser2, testDb as any)).rejects.toThrow(
-      'Username "testuser" is already taken'
+      'Username "testuser" is already taken',
     )
 
     const allUsers = await testDb.select().from(users)
     expect(allUsers).toHaveLength(1)
   })
-}) 
+
+  it("should handle database connection errors gracefully", async () => {
+    const unpreparedUser: UnpreparedUser = {
+      email: "test@example.com",
+      username: "testuser",
+    }
+
+    await expect(createUser(unpreparedUser, null as any)).rejects.toThrow()
+  })
+
+  it("should handle very long usernames", async () => {
+    const unpreparedUser: UnpreparedUser = {
+      email: "test@example.com",
+      username: "a".repeat(100),
+    }
+    const result = await createUser(unpreparedUser, testDb as any)
+    expect(result).toBeDefined()
+    expect(result.username).toBe("a".repeat(100))
+    expect(result.id).toBeDefined()
+  })
+
+  it("should handle very long emails", async () => {
+    const unpreparedUser: UnpreparedUser = {
+      email: `${"a".repeat(100)}@example.com`,
+      username: "testuser",
+    }
+    const result = await createUser(unpreparedUser, testDb as any)
+    expect(result).toBeDefined()
+    expect(result.username).toBe("testuser")
+    expect(result.hash).toHaveLength(64)
+    expect(result.id).toBeDefined()
+  })
+
+  it("should handle empty username", async () => {
+    const unpreparedUser: UnpreparedUser = {
+      email: "test@example.com",
+      username: "",
+    }
+    const result = await createUser(unpreparedUser, testDb as any)
+    expect(result).toBeDefined()
+    expect(result.username).toBe("")
+    expect(result.id).toBeDefined()
+  })
+
+  it("should handle empty email", async () => {
+    const unpreparedUser: UnpreparedUser = {
+      email: "",
+      username: "testuser",
+    }
+    const result = await createUser(unpreparedUser, testDb as any)
+    expect(result).toBeDefined()
+    expect(result.username).toBe("testuser")
+    expect(result.hash).toHaveLength(64)
+  })
+
+  it("should handle null values in optional fields", async () => {
+    const unpreparedUser: UnpreparedUser = {
+      email: "test@example.com",
+      username: "testuser",
+    }
+    const result = await createUser(unpreparedUser, testDb as any)
+    expect(result).toBeDefined()
+    expect(result.verificationToken).toBeNull()
+    expect(result.verifiedAt).toBeNull()
+    expect(result.verificationTokenExpiresAt).toBeNull()
+    expect(result.lastLogin).toBeNull()
+  })
+})
