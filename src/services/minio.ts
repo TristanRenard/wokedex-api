@@ -1,6 +1,7 @@
 import { createId } from "@paralleldrive/cuid2"
 import "dotenv/config"
 import { Client } from "minio"
+import umami from "../umami.js"
 
 if (
   !process.env.MINIO_ENDPOINT ||
@@ -20,10 +21,26 @@ const minioClient = new Client({
 const BUCKET_NAME = process.env.MINIO_BUCKET_NAME ?? "wokedex-images"
 
 export const ensureBucket = async (): Promise<void> => {
-  const exists = await minioClient.bucketExists(BUCKET_NAME)
+  try {
+    await umami.track("minio_ensure_bucket_started", {
+      bucketName: BUCKET_NAME,
+    })
 
-  if (!exists) {
-    await minioClient.makeBucket(BUCKET_NAME, "us-east-1")
+    const exists = await minioClient.bucketExists(BUCKET_NAME)
+
+    if (!exists) {
+      await umami.track("minio_creating_bucket", { bucketName: BUCKET_NAME })
+      await minioClient.makeBucket(BUCKET_NAME, "us-east-1")
+      await umami.track("minio_bucket_created", { bucketName: BUCKET_NAME })
+    } else {
+      await umami.track("minio_bucket_exists", { bucketName: BUCKET_NAME })
+    }
+  } catch (error) {
+    await umami.track("minio_ensure_bucket_error", {
+      error: error instanceof Error ? error.message : "unknown",
+      bucketName: BUCKET_NAME,
+    })
+    throw error
   }
 }
 
@@ -32,19 +49,38 @@ export const uploadImage = async (
   originalName: string,
   mimeType: string,
 ): Promise<{ url: string; key: string }> => {
-  await ensureBucket()
+  try {
+    await umami.track("minio_upload_started", {
+      originalName,
+      mimeType,
+      fileSize: file.length.toString(),
+    })
 
-  const extension = originalName.split(".").pop() ?? "jpg"
-  const key = `images/${createId()}.${extension}`
+    await ensureBucket()
 
-  await minioClient.putObject(BUCKET_NAME, key, file, undefined, {
-    "Content-Type": mimeType,
-    "Cache-Control": "public, max-age=31536000",
-  })
+    const extension = originalName.split(".").pop() ?? "jpg"
+    const key = `images/${createId()}.${extension}`
 
-  const url = `/${key}`
+    await umami.track("minio_uploading_file", { key, extension })
 
-  return { url, key }
+    await minioClient.putObject(BUCKET_NAME, key, file, undefined, {
+      "Content-Type": mimeType,
+      "Cache-Control": "public, max-age=31536000",
+    })
+
+    const url = `/${key}`
+
+    await umami.track("minio_upload_success", { key, url })
+
+    return { url, key }
+  } catch (error) {
+    await umami.track("minio_upload_error", {
+      error: error instanceof Error ? error.message : "unknown",
+      originalName,
+      mimeType,
+    })
+    throw error
+  }
 }
 
 export default minioClient

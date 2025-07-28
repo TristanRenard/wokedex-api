@@ -11,43 +11,76 @@ import searchImages from "./routes/search-image.js"
 import searchImagesDB from "./routes/searchDB-image.js"
 import upload, { authMiddleware } from "./routes/upload.js"
 import verify from "./routes/verify.js"
+import umami from "./umami.js"
 
 config()
 
 const app = new Hono()
 
-app.get("/", (c) => c.text("wokedex api is running"))
+app.get("/", async (c) => {
+  await umami.track("homepage_accessed")
+
+  return c.text("wokedex api is running")
+})
 
 // POST /login
-app.post("/login", async (c) => await login(c))
+app.post("/login", async (c) => {
+  await umami.track("login_attempt")
+
+  return await login(c)
+})
 
 // POST /verify
-app.post("/verify", async (c) => await verify(c))
+app.post("/verify", async (c) => {
+  await umami.track("verification_attempt")
+
+  return await verify(c)
+})
 
 // POST /upload (requires authentication)
-app.post(
-  "/upload",
-  authMiddleware,
-  async (c) => await upload(c as unknown as AuthenticatedContext),
-)
+app.post("/upload", authMiddleware, async (c) => {
+  await umami.track("upload_attempt")
+
+  return await upload(c as unknown as AuthenticatedContext)
+})
 
 // GET /search-images (public endpoint - Meilisearch)
-app.get("/search-images", async (c) => await searchImages(c))
+app.get("/search-images", async (c) => {
+  await umami.track("search_images_meilisearch")
+
+  return await searchImages(c)
+})
 
 // GET /search-images-db (public endpoint - Database search)
-app.get("/search-images-db", async (c) => await searchImagesDB(c))
+app.get("/search-images-db", async (c) => {
+  await umami.track("search_images_database")
+
+  return await searchImagesDB(c)
+})
 
 // POST /reindex (requires admin authentication)
-app.post(
-  "/reindex",
-  reindexAuthMiddleware,
-  async (c) => await reindex(c as unknown as AuthenticatedContext),
-)
+app.post("/reindex", reindexAuthMiddleware, async (c) => {
+  await umami.track("reindex_attempt")
+
+  return await reindex(c as unknown as AuthenticatedContext)
+})
 
 // GET /images/:key (serve images from MinIO)
-app.get("/images/:key", async (c) => await images(c))
+app.get("/images/:key", async (c) => {
+  await umami.track("image_served")
 
-serve({
-  fetch: app.fetch,
-  port: 3000,
+  return await images(c)
 })
+
+serve(
+  {
+    fetch: app.fetch,
+    port: 3000,
+  },
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+  async (info) => {
+    // eslint-disable-next-line no-console
+    console.log(`Server is running on http://localhost:${info.port}`)
+    await umami.track("server_started")
+  },
+)

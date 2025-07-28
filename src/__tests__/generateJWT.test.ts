@@ -16,9 +16,9 @@ describe("generateJWT", () => {
     process.env.JWT_SECRET = originalJwtSecret
   })
 
-  it("should generate valid JWT token", () => {
+  it("should generate valid JWT token", async () => {
     const hash = "test-hash-123"
-    const token = generateJWT(hash)
+    const token = await generateJWT(hash)
 
     expect(token).toBeDefined()
     expect(typeof token).toBe("string")
@@ -29,11 +29,11 @@ describe("generateJWT", () => {
     expect(decoded.hash).toBe(hash)
   })
 
-  it("should generate different tokens for different hashes", () => {
+  it("should generate different tokens for different hashes", async () => {
     const hash1 = "test-hash-123"
     const hash2 = "test-hash-456"
-    const token1 = generateJWT(hash1)
-    const token2 = generateJWT(hash2)
+    const token1 = await generateJWT(hash1)
+    const token2 = await generateJWT(hash2)
 
     expect(token1).not.toBe(token2)
     expect(typeof token1).toBe("string")
@@ -47,9 +47,9 @@ describe("generateJWT", () => {
     expect(decoded2.hash).toBe(hash2)
   })
 
-  it("should generate token with correct expiration", () => {
+  it("should generate token with correct expiration", async () => {
     const hash = "test-hash-123"
-    const token = generateJWT(hash)
+    const token = await generateJWT(hash)
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as any
     expect(decoded.hash).toBe(hash)
     expect(decoded.exp).toBeDefined()
@@ -62,8 +62,8 @@ describe("generateJWT", () => {
     expect(decoded.exp).toBeLessThanOrEqual(expectedExp)
   })
 
-  it("should handle empty hash", () => {
-    const token = generateJWT("")
+  it("should handle empty hash", async () => {
+    const token = await generateJWT("")
 
     expect(token).toBeDefined()
     expect(typeof token).toBe("string")
@@ -72,9 +72,9 @@ describe("generateJWT", () => {
     expect(decoded.hash).toBe("")
   })
 
-  it("should handle special characters in hash", () => {
+  it("should handle special characters in hash", async () => {
     const hash = "test-hash@#$%^&*()_+-=[]{}|;':\",./<>?"
-    const token = generateJWT(hash)
+    const token = await generateJWT(hash)
 
     expect(token).toBeDefined()
     expect(typeof token).toBe("string")
@@ -83,9 +83,9 @@ describe("generateJWT", () => {
     expect(decoded.hash).toBe(hash)
   })
 
-  it("should handle very long hash", () => {
+  it("should handle very long hash", async () => {
     const hash = "a".repeat(1000)
-    const token = generateJWT(hash)
+    const token = await generateJWT(hash)
 
     expect(token).toBeDefined()
     expect(typeof token).toBe("string")
@@ -94,9 +94,9 @@ describe("generateJWT", () => {
     expect(decoded.hash).toBe(hash)
   })
 
-  it("should handle unicode characters in hash", () => {
+  it("should handle unicode characters in hash", async () => {
     const hash = "test-hash-émojis🚀-unicode"
-    const token = generateJWT(hash)
+    const token = await generateJWT(hash)
 
     expect(token).toBeDefined()
     expect(typeof token).toBe("string")
@@ -105,10 +105,10 @@ describe("generateJWT", () => {
     expect(decoded.hash).toBe(hash)
   })
 
-  it("should generate valid tokens for same hash", () => {
+  it("should generate valid tokens for same hash", async () => {
     const hash = "test-hash-123"
-    const token1 = generateJWT(hash)
-    const token2 = generateJWT(hash)
+    const token1 = await generateJWT(hash)
+    const token2 = await generateJWT(hash)
 
     // Both tokens should be valid
     expect(typeof token1).toBe("string")
@@ -121,9 +121,9 @@ describe("generateJWT", () => {
     expect(decoded2.hash).toBe(hash)
   })
 
-  it("should include iat (issued at) claim", () => {
+  it("should include iat (issued at) claim", async () => {
     const hash = "test-hash-123"
-    const token = generateJWT(hash)
+    const token = await generateJWT(hash)
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as any
     expect(decoded.iat).toBeDefined()
     expect(typeof decoded.iat).toBe("number")
@@ -135,10 +135,10 @@ describe("generateJWT", () => {
     expect(decoded.iat).toBeLessThanOrEqual(now)
   })
 
-  it("should throw error when JWT_SECRET is undefined", () => {
+  it("should throw error when JWT_SECRET is undefined", async () => {
     delete process.env.JWT_SECRET
 
     const hash = "test-hash-123"
-    expect(() => generateJWT(hash)).toThrow()
+    await expect(generateJWT(hash)).rejects.toThrow()
   })
 })
