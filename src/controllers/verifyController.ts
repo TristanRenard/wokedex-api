@@ -33,11 +33,6 @@ const verifyController = async (
 
     await umami.track("verify_controller_user_found")
 
-    if (!user.verifiedAt) {
-      await umami.track("verify_controller_user_not_verified")
-      throw new Error("User cannot be verified")
-    }
-
     if (
       user.verificationTokenExpiresAt &&
       user.verificationTokenExpiresAt < new Date()

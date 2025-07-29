@@ -1,6 +1,8 @@
 import { db as dbInstance } from "../db/index.js"
+import { loginTemplate } from "../templates/loginTemplate.js"
 import type { UnpreparedUser } from "../types/user.js"
 import umami from "../umami.js"
+import { sendEmail } from "../utils/mail/sendEmail.js"
 import createToken from "../utils/users/createToken.js"
 import { createUser } from "../utils/users/createUser.js"
 import { generateUserHash } from "../utils/users/generateUserHash.js"
@@ -31,6 +33,18 @@ const loginController = async (
     if (user) {
       const { verificationToken } = await createToken(user.hash, db)
       await umami.track("verification_token_created", { success: "true" })
+
+      await sendEmail({
+        email,
+        subject: "Welcome to Wokedex",
+        params: [
+          {
+            key: "verifyURL",
+            value: `https://wokedex.com/verify/${verificationToken}`,
+          },
+        ],
+        template: loginTemplate,
+      })
 
       return verificationToken
     }
