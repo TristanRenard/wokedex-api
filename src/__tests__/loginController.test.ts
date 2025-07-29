@@ -7,7 +7,6 @@ import type { UnpreparedUser } from "../types/user.js"
 import { cleanDatabase } from "./helper.js"
 import { testDb } from "./setup.js"
 
-// Mock console.log to avoid noise in tests
 const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => undefined)
 
 describe("loginController", () => {

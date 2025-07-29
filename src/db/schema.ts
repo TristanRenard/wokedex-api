@@ -20,7 +20,7 @@ export const tags = pgTable("tags", {
   id: text("id")
     .primaryKey()
     .default(sql`gen_random_uuid()`),
-  name: text("name").notNull().unique(),
+  name: text("name").notNull(),
   user: text("user").references(() => users.id),
   keywords: text("keywords").array().notNull().default([]),
   style: json("style").notNull().default({}),
@@ -33,7 +33,7 @@ export const images = pgTable("images", {
     .primaryKey()
     .default(sql`gen_random_uuid()`),
   url: text("url").notNull(),
-  keywords: text("keywords").array().notNull().default([]),
+  keywords: text("keywords").array().default([]),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 })

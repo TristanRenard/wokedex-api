@@ -28,6 +28,9 @@ importers:
       "@typescript-eslint/parser":
         specifier: ^8.37.0
         version: 8.37.0(eslint@9.31.0(jiti@2.4.2))(typescript@5.8.3)
+      "@umami/node":
+        specifier: ^0.4.0
+        version: 0.4.0
       dotenv:
         specifier: ^17.2.0
         version: 17.2.0
@@ -52,6 +55,9 @@ importers:
       multer:
         specifier: ^2.0.2
         version: 2.0.2
+      nodemailer:
+        specifier: ^7.0.5
+        version: 7.0.5
       pg:
         specifier: ^8.16.3
         version: 8.16.3
@@ -74,6 +80,9 @@ importers:
       "@types/node":
         specifier: ^20.11.17
         version: 20.19.9
+      "@types/nodemailer":
+        specifier: ^6.4.17
+        version: 6.4.17
       "@types/pg":
         specifier: ^8.15.4
         version: 8.15.4
@@ -1507,6 +1516,12 @@ packages:
         integrity: sha512-cuVNgarYWZqxRJDQHEB58GEONhOK79QVR/qYx4S7kcUObQvUwvFnYxJuuHUKm2aieN9X3yZB4LZsuYNU1Qphsw==,
       }
 
+  "@types/nodemailer@6.4.17":
+    resolution:
+      {
+        integrity: sha512-I9CCaIp6DTldEg7vyUTZi8+9Vo0hi1/T8gv3C89yk1rSAAzoKQ8H8ki/jBYJSFoH/BisgLP8tkZMlQ91CIquww==,
+      }
+
   "@types/pg@8.15.4":
     resolution:
       {
@@ -1643,6 +1658,12 @@ packages:
         integrity: sha512-YzfhzcTnZVPiLfP/oeKtDp2evwvHLMe0LOy7oe+hb9KKIumLNohYS9Hgp1ifwpu42YWxhZE8yieggz6JpqO/1w==,
       }
     engines: { node: ^18.18.0 || ^20.9.0 || >=21.1.0 }
+
+  "@umami/node@0.4.0":
+    resolution:
+      {
+        integrity: sha512-pyphprbiF7KiDSc+SWZ4/rVM8B5vU27zIiFfEPj2lEqczpI4xAKSp+dM3tlzyRAWJL32fcbCfAaLGhJZQV13Rg==,
+      }
 
   "@vitest/coverage-v8@3.2.4":
     resolution:
@@ -3695,6 +3716,13 @@ packages:
         integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==,
       }
 
+  nodemailer@7.0.5:
+    resolution:
+      {
+        integrity: sha512-nsrh2lO3j4GkLLXoeEksAMgAOqxOv6QumNRVQTJwKH4nuiww6iC2y7GyANs9kRAxCexg3+lTWM3PZ91iLlVjfg==,
+      }
+    engines: { node: ">=6.0.0" }
+
   normalize-path@3.0.0:
     resolution:
       {
@@ -5572,6 +5600,10 @@ snapshots:
     dependencies:
       undici-types: 6.21.0
 
+  "@types/nodemailer@6.4.17":
+    dependencies:
+      "@types/node": 20.19.9
+
   "@types/pg@8.15.4":
     dependencies:
       "@types/node": 20.19.9
@@ -5698,6 +5730,8 @@ snapshots:
     dependencies:
       "@typescript-eslint/types": 8.37.0
       eslint-visitor-keys: 4.2.1
+
+  "@umami/node@0.4.0": {}
 
   "@vitest/coverage-v8@3.2.4(vitest@3.2.4)":
     dependencies:
@@ -6869,6 +6903,8 @@ snapshots:
   nanoid@3.3.11: {}
 
   natural-compare@1.4.0: {}
+
+  nodemailer@7.0.5: {}
 
   normalize-path@3.0.0: {}
 

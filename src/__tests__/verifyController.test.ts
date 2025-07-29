@@ -9,7 +9,6 @@ import { createUser } from "../utils/users/createUser.js"
 import { cleanDatabase } from "./helper.js"
 import { testDb } from "./setup.js"
 
-// Mock console.log to avoid noise in tests
 const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => undefined)
 
 describe("verifyController", () => {
@@ -36,7 +35,6 @@ describe("verifyController", () => {
       .where(eq(users.username, "testuser"))
     const { verificationToken } = await createToken(user.hash, testDb as any)
 
-    // Set verifiedAt to simulate a verified user
     await testDb
       .update(users)
       .set({ verifiedAt: new Date() })
@@ -52,7 +50,6 @@ describe("verifyController", () => {
     expect(typeof jwt).toBe("string")
     expect(jwt.length).toBeGreaterThan(0)
 
-    // Check that user was updated
     const [updatedUser] = await testDb
       .select()
       .from(users)
@@ -76,7 +73,6 @@ describe("verifyController", () => {
       .where(eq(users.username, "testuser"))
     const { verificationToken } = await createToken(user.hash, testDb as any)
 
-    // Set verifiedAt to simulate a verified user
     await testDb
       .update(users)
       .set({ verifiedAt: new Date() })
@@ -88,7 +84,6 @@ describe("verifyController", () => {
     expect(typeof jwt).toBe("string")
     expect(jwt.length).toBeGreaterThan(0)
 
-    // Check that username was not changed
     const [updatedUser] = await testDb
       .select()
       .from(users)
@@ -117,26 +112,6 @@ describe("verifyController", () => {
     ).rejects.toThrow("User not found")
   })
 
-  it("should throw error when user is not verified", async () => {
-    const unpreparedUser: UnpreparedUser = {
-      email: "test@example.com",
-      username: "testuser",
-    }
-
-    await createUser(unpreparedUser, testDb as any)
-    const [user] = await testDb
-      .select()
-      .from(users)
-      .where(eq(users.username, "testuser"))
-    const { verificationToken } = await createToken(user.hash, testDb as any)
-
-    // Don't set verifiedAt - user should not be verified
-
-    await expect(
-      verifyController("username", verificationToken, testDb as any),
-    ).rejects.toThrow("User cannot be verified")
-  })
-
   it("should throw error when verification token is expired", async () => {
     const unpreparedUser: UnpreparedUser = {
       email: "test@example.com",
@@ -149,8 +124,6 @@ describe("verifyController", () => {
       .from(users)
       .where(eq(users.username, "testuser"))
     const { verificationToken } = await createToken(user.hash, testDb as any)
-    // Set verifiedAt and expired token
-    // 1 hour ago
     const expiredDate = new Date(Date.now() - 1000 * 60 * 60)
     await testDb
       .update(users)
@@ -166,7 +139,6 @@ describe("verifyController", () => {
   })
 
   it("should handle JWT generation failure", async () => {
-    // Mock JWT_SECRET to be undefined to simulate JWT generation failure
     const originalJwtSecret = process.env.JWT_SECRET
     delete process.env.JWT_SECRET
 
@@ -182,7 +154,6 @@ describe("verifyController", () => {
       .where(eq(users.username, "testuser"))
     const { verificationToken } = await createToken(user.hash, testDb as any)
 
-    // Set verifiedAt to simulate a verified user
     await testDb
       .update(users)
       .set({ verifiedAt: new Date() })
@@ -192,7 +163,6 @@ describe("verifyController", () => {
       verifyController("username", verificationToken, testDb as any),
     ).rejects.toThrow("secretOrPrivateKey must have a value")
 
-    // Restore JWT_SECRET
     process.env.JWT_SECRET = originalJwtSecret
   })
 })

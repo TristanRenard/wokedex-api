@@ -1,0 +1,2 @@
+ALTER TABLE "tags" ADD COLUMN "user" text;--> statement-breakpoint
+ALTER TABLE "tags" ADD CONSTRAINT "tags_user_users_id_fk" FOREIGN KEY ("user") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;

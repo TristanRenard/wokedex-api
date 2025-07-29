@@ -35,7 +35,6 @@ describe("createToken", () => {
     expect(result.verificationToken.length).toBeGreaterThan(0)
     expect(result.verificationTokenExpiresAt).toBeInstanceOf(Date)
 
-    // Check that token was saved to database
     const [updatedUser] = await testDb
       .select()
       .from(users)
@@ -69,12 +68,9 @@ describe("createToken", () => {
       afterCreation.getTime() + 15 * 60 * 1000,
     )
 
-    // Check that expiration is approximately 15 minutes from creation
     const timeDiff =
       result.verificationTokenExpiresAt.getTime() - beforeCreation.getTime()
-    // At least 14 minutes
     expect(timeDiff).toBeGreaterThanOrEqual(14 * 60 * 1000)
-    // At most 16 minutes
     expect(timeDiff).toBeLessThanOrEqual(16 * 60 * 1000)
   })
 
@@ -127,7 +123,6 @@ describe("createToken", () => {
       result2.verificationTokenExpiresAt,
     )
 
-    // Check that the second token overwrote the first in the database
     const [updatedUser] = await testDb
       .select()
       .from(users)
@@ -140,7 +135,6 @@ describe("createToken", () => {
 
   it("should handle non-existent hash gracefully", async () => {
     const nonExistentHash = "non-existent-hash-123"
-    // Should not throw error, but token won't be saved to database
     const result = await createToken(nonExistentHash, testDb as any)
 
     expect(result.verificationToken).toBeDefined()
@@ -160,7 +154,6 @@ describe("createToken", () => {
       .where(eq(users.username, "testuser"))
     const result = await createToken(user.hash, testDb as any)
 
-    // CUID2 tokens typically start with a letter and contain alphanumeric characters
     expect(result.verificationToken).toMatch(/^[a-z][a-z0-9]*$/)
     expect(result.verificationToken.length).toBeGreaterThan(10)
   })
@@ -212,13 +205,11 @@ describe("createToken", () => {
 
     const results = await Promise.all(promises)
 
-    // All should succeed and generate different tokens
     results.forEach((result) => {
       expect(result.verificationToken).toBeDefined()
       expect(result.verificationTokenExpiresAt).toBeInstanceOf(Date)
     })
 
-    // Check that one of the generated tokens is saved in the database
     const [updatedUser] = await testDb
       .select()
       .from(users)

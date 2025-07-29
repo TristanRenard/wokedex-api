@@ -1,0 +1,1 @@
+ALTER TABLE "images" ALTER COLUMN "keywords" DROP NOT NULL;

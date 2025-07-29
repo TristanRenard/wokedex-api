@@ -187,7 +187,6 @@ describe("setUsername", () => {
   it("should not throw error for non-existent hash", async () => {
     const nonExistentHash = "non-existent-hash-123"
 
-    // Should not throw error
     await expect(
       setUsername(nonExistentHash, "newusername", testDb as any),
     ).resolves.toBeUndefined()
