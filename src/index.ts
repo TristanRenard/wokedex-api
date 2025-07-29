@@ -9,6 +9,7 @@ import reindex, {
 } from "./routes/reindex.js"
 import searchImages from "./routes/search-image.js"
 import searchImagesDB from "./routes/searchDB-image.js"
+import tags from "./routes/tags.js"
 import upload, { authMiddleware } from "./routes/upload.js"
 import verify from "./routes/verify.js"
 import umami from "./umami.js"
@@ -71,6 +72,9 @@ app.get("/images/:key", async (c) => {
 
   return await images(c)
 })
+
+// Routes for tags
+app.route("/tags", tags)
 
 serve(
   {

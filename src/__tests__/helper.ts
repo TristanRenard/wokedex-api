@@ -10,4 +10,10 @@ export const cleanDatabase = async (): Promise<void> => {
     RESTART IDENTITY 
     CASCADE
   `)
+
+  await testDb.execute(sql`
+    TRUNCATE TABLE tags 
+    RESTART IDENTITY 
+    CASCADE
+  `)
 }
