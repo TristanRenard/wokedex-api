@@ -70,7 +70,6 @@ describe("getUserByVerificationToken", () => {
       .from(users)
       .where(eq(users.username, "testuser"))
     const { verificationToken } = await createToken(user.hash, testDb as any)
-    // Try with different case
     const modifiedToken = verificationToken.toUpperCase()
     const foundUser = await getUserByVerificationToken(
       modifiedToken,
@@ -131,7 +130,6 @@ describe("getUserByVerificationToken", () => {
       .from(users)
       .where(eq(users.username, "testuser"))
     const { verificationToken } = await createToken(user.hash, testDb as any)
-    // Try with partial token
     const partialToken = verificationToken.substring(
       0,
       verificationToken.length - 5,

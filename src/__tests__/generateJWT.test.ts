@@ -7,12 +7,10 @@ describe("generateJWT", () => {
   const originalJwtSecret = process.env.JWT_SECRET
 
   beforeEach(() => {
-    // Set up JWT_SECRET for tests
     process.env.JWT_SECRET = "test-secret-key"
   })
 
   afterEach(() => {
-    // Restore original JWT_SECRET
     process.env.JWT_SECRET = originalJwtSecret
   })
 
@@ -24,7 +22,6 @@ describe("generateJWT", () => {
     expect(typeof token).toBe("string")
     expect(token.length).toBeGreaterThan(0)
 
-    // Verify the token can be decoded
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as any
     expect(decoded.hash).toBe(hash)
   })
@@ -39,7 +36,6 @@ describe("generateJWT", () => {
     expect(typeof token1).toBe("string")
     expect(typeof token2).toBe("string")
 
-    // Verify both tokens are valid
     const decoded1 = jwt.verify(token1, process.env.JWT_SECRET as string) as any
     const decoded2 = jwt.verify(token2, process.env.JWT_SECRET as string) as any
 
@@ -54,9 +50,7 @@ describe("generateJWT", () => {
     expect(decoded.hash).toBe(hash)
     expect(decoded.exp).toBeDefined()
 
-    // Check that expiration is set to 1 hour from now (with some tolerance)
     const now = Math.floor(Date.now() / 1000)
-    // 1 hour
     const expectedExp = now + 60 * 60
     expect(decoded.exp).toBeGreaterThan(now)
     expect(decoded.exp).toBeLessThanOrEqual(expectedExp)
@@ -110,7 +104,6 @@ describe("generateJWT", () => {
     const token1 = await generateJWT(hash)
     const token2 = await generateJWT(hash)
 
-    // Both tokens should be valid
     expect(typeof token1).toBe("string")
     expect(typeof token2).toBe("string")
 
@@ -127,10 +120,7 @@ describe("generateJWT", () => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as any
     expect(decoded.iat).toBeDefined()
     expect(typeof decoded.iat).toBe("number")
-
-    // Check that iat is close to current time
     const now = Math.floor(Date.now() / 1000)
-    // Within 10 seconds
     expect(decoded.iat).toBeGreaterThan(now - 10)
     expect(decoded.iat).toBeLessThanOrEqual(now)
   })
