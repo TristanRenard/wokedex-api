@@ -40,7 +40,17 @@ const loginController = async (
         params: [
           {
             key: "verifyURL",
-            value: `https://wokedex.com/verify/${verificationToken}`,
+            value: existingUser
+              ? `https://wokedex.com/verify/${verificationToken}`
+              : `https://wokedex.com/verify-new-user/${verificationToken}`,
+          },
+          {
+            key: "changeUsernameURL",
+            value: `https://wokedex.com/change-username/${verificationToken}`,
+          },
+          {
+            key: "deleteAccountURL",
+            value: `https://wokedex.com/delete-account/${verificationToken}`,
           },
         ],
         template: loginTemplate,

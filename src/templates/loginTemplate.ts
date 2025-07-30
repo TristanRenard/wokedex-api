@@ -1,137 +1,29 @@
 const loginTemplate = `
 <div class="container" style="padding: 24px;">
-      <svg style="width: 100%;" width="508" height="73" viewBox="0 0 508 73" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M23.5928 72.0285C20.8216 72.0285 18.3805 70.2053 17.5937 67.5478L0.261464 9.00506C-0.925731 4.9951 2.07893 0.971483 6.2606 0.971483H14.463C17.3935 0.971483 19.9313 3.00572 20.5695 5.86615L29.168 44.4108C29.2042 44.5729 29.348 44.6882 29.5142 44.6882C29.6751 44.6882 29.8159 44.5798 29.857 44.4242L40.1189 5.62845C40.845 2.88343 43.3282 0.971483 46.1674 0.971483H53.5271C56.3681 0.971483 58.8524 2.88583 59.5768 5.63318L69.8416 44.563C69.8826 44.7186 70.0233 44.827 70.1842 44.827C70.3503 44.827 70.4941 44.7117 70.5302 44.5495L79.1315 5.87025C79.768 3.00785 82.3068 0.971483 85.2388 0.971483H93.4378C97.6194 0.971483 100.624 4.9951 99.4369 9.00506L82.1047 67.5478C81.3179 70.2053 78.8768 72.0285 76.1055 72.0285H66.8797C64.1282 72.0285 61.6996 70.2307 60.896 67.599L50.2092 32.603C50.1609 32.4447 50.0147 32.3365 49.8492 32.3365C49.6836 32.3365 49.5375 32.4447 49.4892 32.603L38.8024 67.599C37.9987 70.2308 35.5702 72.0285 32.8187 72.0285H23.5928Z" fill="url(#paint0_linear_4_10)"/>
-        <path d="M23.5928 72.0285C20.8216 72.0285 18.3805 70.2053 17.5937 67.5478L0.261464 9.00506C-0.925731 4.9951 2.07893 0.971483 6.2606 0.971483H14.463C17.3935 0.971483 19.9313 3.00572 20.5695 5.86615L29.168 44.4108C29.2042 44.5729 29.348 44.6882 29.5142 44.6882C29.6751 44.6882 29.8159 44.5798 29.857 44.4242L40.1189 5.62845C40.845 2.88343 43.3282 0.971483 46.1674 0.971483H53.5271C56.3681 0.971483 58.8524 2.88583 59.5768 5.63318L69.8416 44.563C69.8826 44.7186 70.0233 44.827 70.1842 44.827C70.3503 44.827 70.4941 44.7117 70.5302 44.5495L79.1315 5.87025C79.768 3.00785 82.3068 0.971483 85.2388 0.971483H93.4378C97.6194 0.971483 100.624 4.9951 99.4369 9.00506L82.1047 67.5478C81.3179 70.2053 78.8768 72.0285 76.1055 72.0285H66.8797C64.1282 72.0285 61.6996 70.2307 60.896 67.599L50.2092 32.603C50.1609 32.4447 50.0147 32.3365 49.8492 32.3365C49.6836 32.3365 49.5375 32.4447 49.4892 32.603L38.8024 67.599C37.9987 70.2308 35.5702 72.0285 32.8187 72.0285H23.5928Z" fill="white" fill-opacity="0.23"/>
-        <path d="M172.685 36.5C172.685 44.4107 171.141 51.0838 168.053 56.5195C164.965 61.932 160.797 66.0377 155.549 68.8365C150.301 71.6122 144.45 73 137.995 73C131.493 73 125.619 71.6006 120.371 68.8018C115.146 65.9799 110.99 61.8626 107.902 56.4501C104.837 51.0144 103.304 44.3644 103.304 36.5C103.304 28.5894 104.837 21.9278 107.902 16.5152C110.99 11.0795 115.146 6.97386 120.371 4.19819C125.619 1.3994 131.493 0 137.995 0C144.45 0 150.301 1.3994 155.549 4.19819C160.797 6.97386 164.965 11.0795 168.053 16.5152C171.141 21.9278 172.685 28.5894 172.685 36.5ZM152.763 36.5C152.763 32.244 152.194 28.6587 151.056 25.7443C149.941 22.8067 148.281 20.5862 146.075 19.0827C143.893 17.5561 141.199 16.7928 137.995 16.7928C134.791 16.7928 132.085 17.5561 129.88 19.0827C127.697 20.5862 126.037 22.8067 124.899 25.7443C123.784 28.6587 123.227 32.244 123.227 36.5C123.227 40.756 123.784 44.3528 124.899 47.2904C126.037 50.2049 127.697 52.4254 129.88 53.952C132.085 55.4555 134.791 56.2072 137.995 56.2072C141.199 56.2072 143.893 55.4555 146.075 53.952C148.281 52.4254 149.941 50.2049 151.056 47.2904C152.194 44.3528 152.763 40.756 152.763 36.5Z" fill="url(#paint1_linear_4_10)"/>
-        <path d="M172.685 36.5C172.685 44.4107 171.141 51.0838 168.053 56.5195C164.965 61.932 160.797 66.0377 155.549 68.8365C150.301 71.6122 144.45 73 137.995 73C131.493 73 125.619 71.6006 120.371 68.8018C115.146 65.9799 110.99 61.8626 107.902 56.4501C104.837 51.0144 103.304 44.3644 103.304 36.5C103.304 28.5894 104.837 21.9278 107.902 16.5152C110.99 11.0795 115.146 6.97386 120.371 4.19819C125.619 1.3994 131.493 0 137.995 0C144.45 0 150.301 1.3994 155.549 4.19819C160.797 6.97386 164.965 11.0795 168.053 16.5152C171.141 21.9278 172.685 28.5894 172.685 36.5ZM152.763 36.5C152.763 32.244 152.194 28.6587 151.056 25.7443C149.941 22.8067 148.281 20.5862 146.075 19.0827C143.893 17.5561 141.199 16.7928 137.995 16.7928C134.791 16.7928 132.085 17.5561 129.88 19.0827C127.697 20.5862 126.037 22.8067 124.899 25.7443C123.784 28.6587 123.227 32.244 123.227 36.5C123.227 40.756 123.784 44.3528 124.899 47.2904C126.037 50.2049 127.697 52.4254 129.88 53.952C132.085 55.4555 134.791 56.2072 137.995 56.2072C141.199 56.2072 143.893 55.4555 146.075 53.952C148.281 52.4254 149.941 50.2049 151.056 47.2904C152.194 44.3528 152.763 40.756 152.763 36.5Z" fill="white" fill-opacity="0.23"/>
-        <path d="M187.902 72.0285C184.447 72.0285 181.645 69.2271 181.645 65.7714V7.22862C181.645 3.7729 184.447 0.971483 187.902 0.971483H194.754C198.21 0.971483 201.011 3.7729 201.011 7.22863V29.0499C201.011 29.4087 201.302 29.6996 201.66 29.6996C201.865 29.6996 202.058 29.6029 202.181 29.4387L221.565 3.48428C222.746 1.90285 224.604 0.971483 226.577 0.971483H233.38C238.557 0.971483 241.494 6.90147 238.357 11.0203L224.531 29.1718C222.953 31.2431 222.823 34.0751 224.204 36.2824L240.577 62.4524C243.184 66.6199 240.189 72.0285 235.273 72.0285H226.98C224.784 72.0285 222.749 70.8776 221.618 68.9959L211.814 52.6907C209.702 49.1783 204.718 48.8924 202.218 52.1402C201.435 53.1575 201.011 54.4052 201.011 55.6889V65.7714C201.011 69.2271 198.21 72.0285 194.754 72.0285H187.902Z" fill="url(#paint2_linear_4_10)"/>
-        <path d="M187.902 72.0285C184.447 72.0285 181.645 69.2271 181.645 65.7714V7.22862C181.645 3.7729 184.447 0.971483 187.902 0.971483H194.754C198.21 0.971483 201.011 3.7729 201.011 7.22863V29.0499C201.011 29.4087 201.302 29.6996 201.66 29.6996C201.865 29.6996 202.058 29.6029 202.181 29.4387L221.565 3.48428C222.746 1.90285 224.604 0.971483 226.577 0.971483H233.38C238.557 0.971483 241.494 6.90147 238.357 11.0203L224.531 29.1718C222.953 31.2431 222.823 34.0751 224.204 36.2824L240.577 62.4524C243.184 66.6199 240.189 72.0285 235.273 72.0285H226.98C224.784 72.0285 222.749 70.8776 221.618 68.9959L211.814 52.6907C209.702 49.1783 204.718 48.8924 202.218 52.1402C201.435 53.1575 201.011 54.4052 201.011 55.6889V65.7714C201.011 69.2271 198.21 72.0285 194.754 72.0285H187.902Z" fill="white" fill-opacity="0.23"/>
-        <path d="M258.014 72.0285C254.559 72.0285 251.758 69.2271 251.758 65.7714V7.22862C251.758 3.7729 254.559 0.971483 258.014 0.971483H296.91C300.366 0.971483 303.167 3.7729 303.167 7.22863V10.2581C303.167 13.7138 300.366 16.5152 296.91 16.5152H277.229C273.857 16.5152 271.123 19.2492 271.123 22.6217C271.123 25.9942 273.857 28.7281 277.229 28.7281H294.263C297.719 28.7281 300.52 31.5296 300.52 34.9853V38.0147C300.52 41.4704 297.719 44.2719 294.263 44.2719H277.229C273.857 44.2719 271.123 47.0058 271.123 50.3783C271.123 53.7508 273.857 56.4848 277.229 56.4848H296.771C300.226 56.4848 303.027 59.2862 303.027 62.7419V65.7714C303.027 69.2271 300.226 72.0285 296.771 72.0285H258.014Z" fill="url(#paint3_linear_4_10)"/>
-        <path d="M258.014 72.0285C254.559 72.0285 251.758 69.2271 251.758 65.7714V7.22862C251.758 3.7729 254.559 0.971483 258.014 0.971483H296.91C300.366 0.971483 303.167 3.7729 303.167 7.22863V10.2581C303.167 13.7138 300.366 16.5152 296.91 16.5152H277.229C273.857 16.5152 271.123 19.2492 271.123 22.6217C271.123 25.9942 273.857 28.7281 277.229 28.7281H294.263C297.719 28.7281 300.52 31.5296 300.52 34.9853V38.0147C300.52 41.4704 297.719 44.2719 294.263 44.2719H277.229C273.857 44.2719 271.123 47.0058 271.123 50.3783C271.123 53.7508 273.857 56.4848 277.229 56.4848H296.771C300.226 56.4848 303.027 59.2862 303.027 62.7419V65.7714C303.027 69.2271 300.226 72.0285 296.771 72.0285H258.014Z" fill="white" fill-opacity="0.23"/>
-        <path d="M340.217 72.0285H319.028C315.572 72.0285 312.771 69.2271 312.771 65.7714V7.22862C312.771 3.7729 315.572 0.971483 319.028 0.971483H339.938C347.276 0.971483 353.615 2.39401 358.955 5.23907C364.319 8.061 368.452 12.132 371.355 17.452C374.281 22.7489 375.743 29.0982 375.743 36.5C375.743 43.9018 374.292 50.2627 371.39 55.5827C368.487 60.8796 364.377 64.9506 359.06 67.7956C353.743 70.6176 347.462 72.0285 340.217 72.0285ZM332.137 49.3949C332.137 52.8507 334.938 55.6521 338.393 55.6521H339.52C343.05 55.6521 346.057 55.0854 348.541 53.952C351.049 52.8186 352.953 50.8641 354.253 48.0884C355.577 45.3127 356.239 41.4499 356.239 36.5C356.239 31.5501 355.565 27.6873 354.219 24.9116C352.895 22.1359 350.945 20.1814 348.367 19.048C345.813 17.9146 342.678 17.3479 338.963 17.3479H338.393C334.938 17.3479 332.137 20.1493 332.137 23.6051V49.3949Z" fill="url(#paint4_linear_4_10)"/>
-        <path d="M340.217 72.0285H319.028C315.572 72.0285 312.771 69.2271 312.771 65.7714V7.22862C312.771 3.7729 315.572 0.971483 319.028 0.971483H339.938C347.276 0.971483 353.615 2.39401 358.955 5.23907C364.319 8.061 368.452 12.132 371.355 17.452C374.281 22.7489 375.743 29.0982 375.743 36.5C375.743 43.9018 374.292 50.2627 371.39 55.5827C368.487 60.8796 364.377 64.9506 359.06 67.7956C353.743 70.6176 347.462 72.0285 340.217 72.0285ZM332.137 49.3949C332.137 52.8507 334.938 55.6521 338.393 55.6521H339.52C343.05 55.6521 346.057 55.0854 348.541 53.952C351.049 52.8186 352.953 50.8641 354.253 48.0884C355.577 45.3127 356.239 41.4499 356.239 36.5C356.239 31.5501 355.565 27.6873 354.219 24.9116C352.895 22.1359 350.945 20.1814 348.367 19.048C345.813 17.9146 342.678 17.3479 338.963 17.3479H338.393C334.938 17.3479 332.137 20.1493 332.137 23.6051V49.3949Z" fill="white" fill-opacity="0.23"/>
-        <path d="M390.96 72.0285C387.505 72.0285 384.703 69.2271 384.703 65.7714V7.22862C384.703 3.7729 387.505 0.971483 390.96 0.971483H429.856C433.311 0.971483 436.112 3.7729 436.112 7.22863V10.2581C436.112 13.7138 433.311 16.5152 429.856 16.5152H410.175C406.803 16.5152 404.069 19.2492 404.069 22.6217C404.069 25.9942 406.803 28.7281 410.175 28.7281H427.209C430.664 28.7281 433.465 31.5296 433.465 34.9853V38.0147C433.465 41.4704 430.664 44.2719 427.209 44.2719H410.175C406.803 44.2719 404.069 47.0058 404.069 50.3783C404.069 53.7508 406.803 56.4848 410.175 56.4848H429.716C433.172 56.4848 435.973 59.2862 435.973 62.7419V65.7714C435.973 69.2271 433.172 72.0285 429.716 72.0285H390.96Z" fill="url(#paint5_linear_4_10)"/>
-        <path d="M390.96 72.0285C387.505 72.0285 384.703 69.2271 384.703 65.7714V7.22862C384.703 3.7729 387.505 0.971483 390.96 0.971483H429.856C433.311 0.971483 436.112 3.7729 436.112 7.22863V10.2581C436.112 13.7138 433.311 16.5152 429.856 16.5152H410.175C406.803 16.5152 404.069 19.2492 404.069 22.6217C404.069 25.9942 406.803 28.7281 410.175 28.7281H427.209C430.664 28.7281 433.465 31.5296 433.465 34.9853V38.0147C433.465 41.4704 430.664 44.2719 427.209 44.2719H410.175C406.803 44.2719 404.069 47.0058 404.069 50.3783C404.069 53.7508 406.803 56.4848 410.175 56.4848H429.716C433.172 56.4848 435.973 59.2862 435.973 62.7419V65.7714C435.973 69.2271 433.172 72.0285 429.716 72.0285H390.96Z" fill="white" fill-opacity="0.23"/>
-        <path d="M462.827 0.971483C465.082 0.971483 467.162 2.18444 468.272 4.14658L478.04 21.407C478.126 21.5573 478.285 21.6502 478.458 21.6502C478.629 21.6502 478.788 21.5582 478.873 21.4091L488.775 4.11891C489.89 2.17233 491.961 0.971483 494.204 0.971483H501.122C505.985 0.971483 508.989 6.27744 506.486 10.448L492.825 33.2179C491.617 35.2324 491.638 37.7544 492.881 39.7479L507.042 62.4606C509.641 66.6284 506.645 72.0285 501.733 72.0285H494.477C492.237 72.0285 490.168 70.8311 489.052 68.8889L478.874 51.1751C478.788 51.0256 478.629 50.9335 478.457 50.9335C478.284 50.9335 478.125 51.0256 478.039 51.1751L467.861 68.8889C466.745 70.8311 464.676 72.0285 462.437 72.0285H455.244C450.349 72.0285 447.35 66.6597 449.917 62.4908L463.931 39.7281C465.152 37.7439 465.17 35.2452 463.977 33.2437L450.381 10.4325C447.895 6.26163 450.9 0.971483 455.755 0.971483H462.827Z" fill="url(#paint6_linear_4_10)"/>
-        <path d="M462.827 0.971483C465.082 0.971483 467.162 2.18444 468.272 4.14658L478.04 21.407C478.126 21.5573 478.285 21.6502 478.458 21.6502C478.629 21.6502 478.788 21.5582 478.873 21.4091L488.775 4.11891C489.89 2.17233 491.961 0.971483 494.204 0.971483H501.122C505.985 0.971483 508.989 6.27744 506.486 10.448L492.825 33.2179C491.617 35.2324 491.638 37.7544 492.881 39.7479L507.042 62.4606C509.641 66.6284 506.645 72.0285 501.733 72.0285H494.477C492.237 72.0285 490.168 70.8311 489.052 68.8889L478.874 51.1751C478.788 51.0256 478.629 50.9335 478.457 50.9335C478.284 50.9335 478.125 51.0256 478.039 51.1751L467.861 68.8889C466.745 70.8311 464.676 72.0285 462.437 72.0285H455.244C450.349 72.0285 447.35 66.6597 449.917 62.4908L463.931 39.7281C465.152 37.7439 465.17 35.2452 463.977 33.2437L450.381 10.4325C447.895 6.26163 450.9 0.971483 455.755 0.971483H462.827Z" fill="white" fill-opacity="0.23"/>
-        <defs>
-        <linearGradient id="paint0_linear_4_10" x1="-2.11697" y1="8.83825e-07" x2="513.01" y2="72.9871" gradientUnits="userSpaceOnUse">
-        <stop stop-color="white"/>
-        <stop offset="0.101099" stop-color="#F6A8B5"/>
-        <stop offset="0.2" stop-color="#61C9EE"/>
-        <stop offset="0.3" stop-color="#593B15"/>
-        <stop offset="0.4" stop-color="#050100"/>
-        <stop offset="0.5" stop-color="#E71923"/>
-        <stop offset="0.6" stop-color="#F26422"/>
-        <stop offset="0.7" stop-color="#FEDB10"/>
-        <stop offset="0.8" stop-color="#209747"/>
-        <stop offset="0.9" stop-color="#1751D6"/>
-        <stop offset="1" stop-color="#641AB7"/>
-        </linearGradient>
-        <linearGradient id="paint1_linear_4_10" x1="-2.11697" y1="8.83825e-07" x2="513.01" y2="72.9871" gradientUnits="userSpaceOnUse">
-        <stop stop-color="white"/>
-        <stop offset="0.101099" stop-color="#F6A8B5"/>
-        <stop offset="0.2" stop-color="#61C9EE"/>
-        <stop offset="0.3" stop-color="#593B15"/>
-        <stop offset="0.4" stop-color="#050100"/>
-        <stop offset="0.5" stop-color="#E71923"/>
-        <stop offset="0.6" stop-color="#F26422"/>
-        <stop offset="0.7" stop-color="#FEDB10"/>
-        <stop offset="0.8" stop-color="#209747"/>
-        <stop offset="0.9" stop-color="#1751D6"/>
-        <stop offset="1" stop-color="#641AB7"/>
-        </linearGradient>
-        <linearGradient id="paint2_linear_4_10" x1="-2.11697" y1="8.83825e-07" x2="513.01" y2="72.9871" gradientUnits="userSpaceOnUse">
-        <stop stop-color="white"/>
-        <stop offset="0.101099" stop-color="#F6A8B5"/>
-        <stop offset="0.2" stop-color="#61C9EE"/>
-        <stop offset="0.3" stop-color="#593B15"/>
-        <stop offset="0.4" stop-color="#050100"/>
-        <stop offset="0.5" stop-color="#E71923"/>
-        <stop offset="0.6" stop-color="#F26422"/>
-        <stop offset="0.7" stop-color="#FEDB10"/>
-        <stop offset="0.8" stop-color="#209747"/>
-        <stop offset="0.9" stop-color="#1751D6"/>
-        <stop offset="1" stop-color="#641AB7"/>
-        </linearGradient>
-        <linearGradient id="paint3_linear_4_10" x1="-2.11697" y1="8.83825e-07" x2="513.01" y2="72.9871" gradientUnits="userSpaceOnUse">
-        <stop stop-color="white"/>
-        <stop offset="0.101099" stop-color="#F6A8B5"/>
-        <stop offset="0.2" stop-color="#61C9EE"/>
-        <stop offset="0.3" stop-color="#593B15"/>
-        <stop offset="0.4" stop-color="#050100"/>
-        <stop offset="0.5" stop-color="#E71923"/>
-        <stop offset="0.6" stop-color="#F26422"/>
-        <stop offset="0.7" stop-color="#FEDB10"/>
-        <stop offset="0.8" stop-color="#209747"/>
-        <stop offset="0.9" stop-color="#1751D6"/>
-        <stop offset="1" stop-color="#641AB7"/>
-        </linearGradient>
-        <linearGradient id="paint4_linear_4_10" x1="-2.11697" y1="8.83825e-07" x2="513.01" y2="72.9871" gradientUnits="userSpaceOnUse">
-        <stop stop-color="white"/>
-        <stop offset="0.101099" stop-color="#F6A8B5"/>
-        <stop offset="0.2" stop-color="#61C9EE"/>
-        <stop offset="0.3" stop-color="#593B15"/>
-        <stop offset="0.4" stop-color="#050100"/>
-        <stop offset="0.5" stop-color="#E71923"/>
-        <stop offset="0.6" stop-color="#F26422"/>
-        <stop offset="0.7" stop-color="#FEDB10"/>
-        <stop offset="0.8" stop-color="#209747"/>
-        <stop offset="0.9" stop-color="#1751D6"/>
-        <stop offset="1" stop-color="#641AB7"/>
-        </linearGradient>
-        <linearGradient id="paint5_linear_4_10" x1="-2.11697" y1="8.83825e-07" x2="513.01" y2="72.9871" gradientUnits="userSpaceOnUse">
-        <stop stop-color="white"/>
-        <stop offset="0.101099" stop-color="#F6A8B5"/>
-        <stop offset="0.2" stop-color="#61C9EE"/>
-        <stop offset="0.3" stop-color="#593B15"/>
-        <stop offset="0.4" stop-color="#050100"/>
-        <stop offset="0.5" stop-color="#E71923"/>
-        <stop offset="0.6" stop-color="#F26422"/>
-        <stop offset="0.7" stop-color="#FEDB10"/>
-        <stop offset="0.8" stop-color="#209747"/>
-        <stop offset="0.9" stop-color="#1751D6"/>
-        <stop offset="1" stop-color="#641AB7"/>
-        </linearGradient>
-        <linearGradient id="paint6_linear_4_10" x1="-2.11697" y1="8.83825e-07" x2="513.01" y2="72.9871" gradientUnits="userSpaceOnUse">
-        <stop stop-color="white"/>
-        <stop offset="0.101099" stop-color="#F6A8B5"/>
-        <stop offset="0.2" stop-color="#61C9EE"/>
-        <stop offset="0.3" stop-color="#593B15"/>
-        <stop offset="0.4" stop-color="#050100"/>
-        <stop offset="0.5" stop-color="#E71923"/>
-        <stop offset="0.6" stop-color="#F26422"/>
-        <stop offset="0.7" stop-color="#FEDB10"/>
-        <stop offset="0.8" stop-color="#209747"/>
-        <stop offset="0.9" stop-color="#1751D6"/>
-        <stop offset="1" stop-color="#641AB7"/>
-        </linearGradient>
-        </defs>
-        </svg>
+      <img src="https://github.com/TristanRenard/wokedex-api/blob/develop/.github/images/image.png?raw=true" alt="Logo Wokedex - Application de création de cartes personnalisées" style="width: 100%;" role="img" aria-label="Logo de l'application Wokedex"/>
         
       <p style="font-family: 'Inter', sans-serif; font-size: 16px; line-height: 1.5; padding-top: 80px; text-align: justify;">
-        Bonjour, bienvenu a tout.e.s ou bon retour parmi nous, 
+        Bonjour, bienvenue ou bon retour parmi nous, 
       </br>
-        Si cette tentative de connexion est légitime, vous pouvez continuer et cliquer sur le bouton ci-dessous, si cette tentative de connexion n’est pas légitime veuillez ignorer cet email, les emails stockés sont anonymisés et non réversible, de ce fait nous ne stockons aucune autre information personnel qu’un nom d’utilisateur enregistré à la première connexion.
+        Si cette tentative de connexion est légitime, vous pouvez continuer et cliquer sur le bouton ci-dessous. Si cette tentative de connexion n'est pas légitime, veuillez ignorer cet email. Pour protéger votre vie privée, nous utilisons un système de chiffrement qui rend vos données personnelles anonymes et non récupérables. Nous ne conservons donc qu'un nom d'utilisateur que vous avez choisi lors de votre première connexion.
         </p>
         <div style="padding-top: 80px; text-align: center;">
-          <a href="{{verifyURL}}" style="background: linear-gradient(98deg, #FDF0F2 -0.36%, #F7B8C3 9.57%, #77CDEB 19.29%, #624C32 29.12%, #110302 38.95%, #E83942 48.78%, #F26E41 58.61%, #FEDF32 68.44%, #56AC5C 78.27%, #4063D8 88.1%, #7B3BC1 97.92%); color: #fff; padding: 16px 48px; border-radius: 8px; text-decoration: none; font-family: 'Inter', sans-serif; font-size: 24px; line-height: 1.5; text-align: center; font-weight: 900;">
+          <a href="{{verifyURL}}" style="background: linear-gradient(98deg, #FDF0F2 -0.36%, #F7B8C3 9.57%, #77CDEB 19.29%, #624C32 29.12%, #110302 38.95%, #E83942 48.78%, #F26E41 58.61%, #FEDF32 68.44%, #56AC5C 78.27%, #4063D8 88.1%, #7B3BC1 97.92%); color: #fff; padding: 16px 48px; border-radius: 8px; text-decoration: none; font-family: 'Inter', sans-serif; font-size: 24px; line-height: 1.5; text-align: center; font-weight: 900;" role="button" aria-label="Bouton de connexion sécurisée">
             Me connecter
           </a>
         </div>
         <p style="font-family: 'Inter', sans-serif; font-size: 16px; line-height: 1.5; padding-top: 80px; text-align: justify;">
-          Conformément aux RGPD vous pouvez supprimer les données personnels liées a votre compte, c’est à dire dans ce cas ci, votre profile, avec votre nom d’utilisateur, toutes les cartes crées, ainsi que les tags créés. Cette action est irréversible, en cas de suppression accidentelle aucune donnée ne pourras être récupérée. Si vous êtes une personne avec une notoriété et que votre pseudo est déjà utilisé veuillez me contacter (rien n’est garantie de ce côté, c’est au cas par cas).
+          Conformément au RGPD, vous pouvez supprimer les données personnelles liées à votre compte, c'est-à-dire dans ce cas-ci, votre profil avec votre nom d'utilisateur, toutes les cartes créées, ainsi que les tags créés. Cette action est irréversible, en cas de suppression accidentelle aucune donnée ne pourra être récupérée. Si vous êtes une personnalité publique et que votre pseudo habituel est déjà utilisé sur notre plateforme, veuillez me contacter pour examiner la situation au cas par cas.
           </p>
-          <table style="width: 100%; padding-top: 80px;">
+          <table style="width: 100%; padding-top: 80px;" role="presentation">
             <tr>
               <td style="width: 50%; padding-right: 20px;">
-                <a href="{{changeUsernameURL}}" style="background: linear-gradient(98deg, #FDF0F2 -0.36%, #F7B8C3 9.57%, #77CDEB 19.29%, #624C32 29.12%, #110302 38.95%, #E83942 48.78%, #F26E41 58.61%, #FEDF32 68.44%, #56AC5C 78.27%, #4063D8 88.1%, #7B3BC1 97.92%); color: #fff; padding: 12px 48px; border-radius: 8px; text-decoration: none; font-family: 'Inter', sans-serif; font-size: 16px; line-height: 1.5; text-align: center; font-weight: 900; display: block; box-sizing: border-box;">
+                <a href="{{changeUsernameURL}}" style="background: linear-gradient(98deg, #FDF0F2 -0.36%, #F7B8C3 9.57%, #77CDEB 19.29%, #624C32 29.12%, #110302 38.95%, #E83942 48.78%, #F26E41 58.61%, #FEDF32 68.44%, #56AC5C 78.27%, #4063D8 88.1%, #7B3BC1 97.92%); color: #fff; padding: 12px 48px; border-radius: 8px; text-decoration: none; font-family: 'Inter', sans-serif; font-size: 16px; line-height: 1.5; text-align: center; font-weight: 900; display: block; box-sizing: border-box;" role="button" aria-label="Modifier le nom d'utilisateur">
                   Changer mon pseudo
                 </a>
               </td>
               <td style="width: 50%; padding-left: 20px;">
-                <a href="{{deleteAccountURL}}" style="background: #FF6565; color: #fff; padding: 12px 48px; border-radius: 8px; text-decoration: none; font-family: 'Inter', sans-serif; font-size: 16px; line-height: 1.5; text-align: center; font-weight: 900; display: block; box-sizing: border-box;">
+                <a href="{{deleteAccountURL}}" style="background: #FF6565; color: #fff; padding: 12px 48px; border-radius: 8px; text-decoration: none; font-family: 'Inter', sans-serif; font-size: 16px; line-height: 1.5; text-align: center; font-weight: 900; display: block; box-sizing: border-box;" role="button" aria-label="Supprimer définitivement le compte utilisateur">
                   Supprimer mon compte
                 </a>
               </td>
