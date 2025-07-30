@@ -6,7 +6,7 @@ import * as schema from "./schema.js"
 config()
 
 const connectionString =
-  process.env.TEST_DATABASE_URL ?? process.env.DATABASE_URL
+  process.env.DATABASE_URL ?? process.env.TEST_DATABASE_URL
 const pool = new Pool({
   connectionString,
 })
