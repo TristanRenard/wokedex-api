@@ -44,6 +44,7 @@ export const cards = pgTable("cards", {
     .default(sql`gen_random_uuid()`)
     .notNull(),
   slug: text("slug").notNull().unique(),
+  status: text("status").notNull().default("draft"),
   title: text("title"),
   level: integer("level").default(0),
   tag1: text("tag1").references(() => tags.id),

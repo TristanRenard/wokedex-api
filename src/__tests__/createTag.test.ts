@@ -168,4 +168,21 @@ describe("createTag", () => {
     expect(globalResult.user).toBeNull()
     expect(userResult.user).toBe(testUser1.id)
   })
+
+  it("should handle database instance without explicit database parameter", async () => {
+    const tagData = {
+      name: "No Database Param Tag",
+      userId: testUser1.id,
+      keywords: ["test"],
+      style: { color: "green" },
+      database: testDb as any,
+    }
+    const result = await createTag(tagData)
+
+    expect(result).toBeDefined()
+    expect(result.name).toBe("No Database Param Tag")
+    expect(result.user).toBe(testUser1.id)
+    expect(result.keywords).toEqual(["test"])
+    expect(result.style).toEqual({ color: "green" })
+  })
 })

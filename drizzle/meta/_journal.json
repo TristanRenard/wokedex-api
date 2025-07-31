@@ -50,6 +50,13 @@
       "when": 1753711223205,
       "tag": "0006_past_sinister_six",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1753870799538,
+      "tag": "0007_bizarre_talkback",
+      "breakpoints": true
     }
   ]
 }

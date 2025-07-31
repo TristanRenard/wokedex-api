@@ -1,0 +1,423 @@
+{
+  "info": {
+    "name": "Wokedex Cards API",
+    "description": "Collection pour tester tous les endpoints de gestion des cards",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{auth_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "auth_token",
+      "value": "YOUR_JWT_TOKEN_HERE",
+      "type": "string"
+    },
+    {
+      "key": "card_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "card_slug",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/login",
+              "host": ["{{base_url}}"],
+              "path": ["login"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.token) {",
+                  "        pm.collectionVariables.set('auth_token', response.token);",
+                  "        console.log('Token saved:', response.token);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Cards CRUD",
+      "item": [
+        {
+          "name": "Create Card",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Test Card\",\n  \"status\": \"draft\",\n  \"level\": 5,\n  \"tag1\": \"fire\",\n  \"tag2\": \"magic\",\n  \"talent\": \"Fire Magic\",\n  \"object\": \"Staff\",\n  \"pv\": 100,\n  \"acidity\": 10,\n  \"based\": 20,\n  \"da\": 30,\n  \"doom\": 40,\n  \"competence1\": \"Fireball\",\n  \"competence1Tag\": \"attack\",\n  \"competence2\": \"Flame Shield\",\n  \"competence2Tag\": \"defense\",\n  \"competence3\": \"Inferno\",\n  \"competence3Tag\": \"ultimate\",\n  \"competence4\": \"Phoenix\",\n  \"competence4Tag\": \"special\",\n  \"degen\": 50,\n  \"imageId\": null\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/cards",
+              "host": ["{{base_url}}"],
+              "path": ["cards"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('card_id', response.id);",
+                  "    pm.collectionVariables.set('card_slug', response.slug);",
+                  "    console.log('Card created:', response.id);",
+                  "    console.log('Card slug:', response.slug);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get All Cards (Authenticated)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cards?limit=10&offset=0",
+              "host": ["{{base_url}}"],
+              "path": ["cards"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Cards (Public)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cards?limit=10&offset=0&status=published",
+              "host": ["{{base_url}}"],
+              "path": ["cards"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                },
+                {
+                  "key": "status",
+                  "value": "published"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Card by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cards/{{card_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["cards", "{{card_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Card by Slug",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cards/slug/{{card_slug}}",
+              "host": ["{{base_url}}"],
+              "path": ["cards", "slug", "{{card_slug}}"]
+            }
+          }
+        },
+        {
+          "name": "Update Card",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated Test Card\",\n  \"status\": \"published\",\n  \"level\": 10,\n  \"tag1\": \"fire\",\n  \"tag2\": \"magic\",\n  \"talent\": \"Advanced Fire Magic\",\n  \"object\": \"Mythical Staff\",\n  \"pv\": 150,\n  \"acidity\": 15,\n  \"based\": 25,\n  \"da\": 35,\n  \"doom\": 45,\n  \"competence1\": \"Super Fireball\",\n  \"competence1Tag\": \"attack\",\n  \"competence2\": \"Flame Barrier\",\n  \"competence2Tag\": \"defense\",\n  \"competence3\": \"Mega Inferno\",\n  \"competence3Tag\": \"ultimate\",\n  \"competence4\": \"Phoenix Rebirth\",\n  \"competence4Tag\": \"special\",\n  \"degen\": 60,\n  \"imageId\": null\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/cards/{{card_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["cards", "{{card_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Card",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cards/{{card_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["cards", "{{card_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Search Cards",
+      "item": [
+        {
+          "name": "Search Cards by Title",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/search-cards?q=Test&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["search-cards"],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "Test"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search Cards with Filters",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/search-cards?q=fire&filters=status:published&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["search-cards"],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "fire"
+                },
+                {
+                  "key": "filters",
+                  "value": "status:published"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search Cards by Talent",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/search-cards?q=magic&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["search-cards"],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "magic"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin Operations",
+      "item": [
+        {
+          "name": "Reindex All Data",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{base_url}}/reindex",
+              "host": ["{{base_url}}"],
+              "path": ["reindex"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Error Tests",
+      "item": [
+        {
+          "name": "Create Card - Missing Title",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"draft\",\n  \"level\": 5\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/cards",
+              "host": ["{{base_url}}"],
+              "path": ["cards"]
+            }
+          }
+        },
+        {
+          "name": "Create Card - Invalid Status",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Test Card\",\n  \"status\": \"invalid_status\",\n  \"level\": 5\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/cards",
+              "host": ["{{base_url}}"],
+              "path": ["cards"]
+            }
+          }
+        },
+        {
+          "name": "Get Non-existent Card",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cards/non-existent-id",
+              "host": ["{{base_url}}"],
+              "path": ["cards", "non-existent-id"]
+            }
+          }
+        },
+        {
+          "name": "Update Non-existent Card",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated Card\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/cards/non-existent-id",
+              "host": ["{{base_url}}"],
+              "path": ["cards", "non-existent-id"]
+            }
+          }
+        },
+        {
+          "name": "Delete Non-existent Card",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cards/non-existent-id",
+              "host": ["{{base_url}}"],
+              "path": ["cards", "non-existent-id"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

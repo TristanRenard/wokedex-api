@@ -1,5 +1,5 @@
 import type { NodePgDatabase } from "drizzle-orm/node-postgres"
-import { db } from "../../db/index.js"
+import { db as dbInstance } from "../../db/index.js"
 import type * as schema from "../../db/schema.js"
 import { tags, type NewTag, type Tag } from "../../db/schema.js"
 import umami from "../../umami.js"
@@ -19,7 +19,7 @@ const createTag = async ({
   style = {},
   database,
 }: CreateTagParams): Promise<Tag> => {
-  const dbInstance = database ?? db
+  const db = database ?? dbInstance
 
   try {
     await umami.track("create_tag_started", {
@@ -34,10 +34,7 @@ const createTag = async ({
       keywords,
       style,
     }
-    const [createdTag] = await dbInstance
-      .insert(tags)
-      .values(newTag)
-      .returning()
+    const [createdTag] = await db.insert(tags).values(newTag).returning()
 
     await umami.track("create_tag_completed", {
       tagId: createdTag.id,

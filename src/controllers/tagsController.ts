@@ -1,5 +1,5 @@
-import type { NodePgDatabase } from "drizzle-orm/node-postgres"
-import type * as schema from "../db/schema.js"
+import type { HandlerResponse } from "hono/types"
+import { db as dbInstance } from "../db/index.js"
 import type { AuthenticatedContext } from "../middleware/auth.js"
 import type { OptionalAuthContext } from "../middleware/optionalAuth.js"
 import umami from "../umami.js"
@@ -10,8 +10,8 @@ import getTags from "../utils/tags/getTags.js"
 
 export const createTagController = async (
   c: AuthenticatedContext,
-  database?: NodePgDatabase<typeof schema>,
-): Promise<Response> => {
+  database = dbInstance,
+): Promise<HandlerResponse<number>> => {
   try {
     await umami.track("create_tag_controller_started")
 
@@ -41,6 +41,8 @@ export const createTagController = async (
 
     return c.json(tag, 201)
   } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(error)
     await umami.track("create_tag_controller_error", {
       error: error instanceof Error ? error.message : "unknown",
     })
@@ -51,7 +53,7 @@ export const createTagController = async (
 
 export const deleteTagController = async (
   c: AuthenticatedContext,
-  database?: NodePgDatabase<typeof schema>,
+  database = dbInstance,
 ): Promise<Response> => {
   try {
     await umami.track("delete_tag_controller_started")
@@ -93,8 +95,8 @@ export const deleteTagController = async (
 
 export const getTagByIdController = async (
   c: OptionalAuthContext,
-  database?: NodePgDatabase<typeof schema>,
-): Promise<Response> => {
+  database = dbInstance,
+): Promise<HandlerResponse<number>> => {
   try {
     await umami.track("get_tag_by_id_controller_started")
 
@@ -136,7 +138,7 @@ export const getTagByIdController = async (
 
 export const getTagsController = async (
   c: AuthenticatedContext,
-  database?: NodePgDatabase<typeof schema>,
+  database = dbInstance,
 ): Promise<Response> => {
   try {
     await umami.track("get_tags_controller_started")

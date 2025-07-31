@@ -1,6 +1,6 @@
 import { sql } from "drizzle-orm"
 import type { NodePgDatabase } from "drizzle-orm/node-postgres"
-import { db } from "../../db/index.js"
+import { db as dbInstance } from "../../db/index.js"
 import type * as schema from "../../db/schema.js"
 import { tags, type Tag } from "../../db/schema.js"
 import umami from "../../umami.js"
@@ -16,7 +16,7 @@ const getTagById = async ({
   userId,
   database,
 }: GetTagByIdParams): Promise<Tag | null> => {
-  const dbInstance = database ?? db
+  const db = database ?? dbInstance
 
   try {
     await umami.track("get_tag_by_id_started", {
@@ -27,7 +27,7 @@ const getTagById = async ({
     let result: Tag[] = []
 
     if (userId) {
-      result = await dbInstance
+      result = await db
         .select()
         .from(tags)
         .where(
@@ -35,7 +35,7 @@ const getTagById = async ({
         )
         .limit(1)
     } else {
-      result = await dbInstance
+      result = await db
         .select()
         .from(tags)
         .where(sql`${tags.id} = ${tagId} AND ${tags.user} IS NULL`)

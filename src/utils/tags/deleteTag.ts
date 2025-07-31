@@ -1,6 +1,6 @@
 import { sql } from "drizzle-orm"
 import type { NodePgDatabase } from "drizzle-orm/node-postgres"
-import { db } from "../../db/index.js"
+import { db as dbInstance } from "../../db/index.js"
 import type * as schema from "../../db/schema.js"
 import { tags } from "../../db/schema.js"
 import umami from "../../umami.js"
@@ -18,7 +18,7 @@ const deleteTag = async ({
   role = 0,
   database,
 }: DeleteTagParams): Promise<boolean> => {
-  const dbInstance = database ?? db
+  const db = database ?? dbInstance
 
   try {
     await umami.track("delete_tag_started", {
@@ -29,13 +29,13 @@ const deleteTag = async ({
     let existingTag: schema.Tag[] = []
 
     if (role >= 2) {
-      existingTag = await dbInstance
+      existingTag = await db
         .select()
         .from(tags)
         .where(sql`${tags.id} = ${tagId}`)
         .limit(1)
     } else {
-      existingTag = await dbInstance
+      existingTag = await db
         .select()
         .from(tags)
         .where(sql`${tags.id} = ${tagId} AND ${tags.user} = ${userId}`)
@@ -50,9 +50,9 @@ const deleteTag = async ({
     }
 
     if (role >= 2) {
-      await dbInstance.delete(tags).where(sql`${tags.id} = ${tagId}`)
+      await db.delete(tags).where(sql`${tags.id} = ${tagId}`)
     } else {
-      await dbInstance
+      await db
         .delete(tags)
         .where(sql`${tags.id} = ${tagId} AND ${tags.user} = ${userId}`)
     }

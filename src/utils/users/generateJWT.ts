@@ -8,7 +8,7 @@ const generateJWT = async (hash: string): Promise<string> => {
     })
 
     const token = jwt.sign({ hash }, process.env.JWT_SECRET as string, {
-      expiresIn: "1h",
+      expiresIn: "1d",
     })
 
     await umami.track("generate_jwt_completed")

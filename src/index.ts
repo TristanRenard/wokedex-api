@@ -2,11 +2,13 @@ import { serve } from "@hono/node-server"
 import { config } from "dotenv"
 import { Hono } from "hono"
 import type { AuthenticatedContext } from "./middleware/auth.js"
+import cards from "./routes/cards.js"
 import images from "./routes/images.js"
 import login from "./routes/login.js"
 import reindex, {
   authMiddleware as reindexAuthMiddleware,
 } from "./routes/reindex.js"
+import searchCards from "./routes/search-cards.js"
 import searchImages from "./routes/search-image.js"
 import searchImagesDB from "./routes/searchDB-image.js"
 import tags from "./routes/tags.js"
@@ -59,6 +61,9 @@ app.get("/search-images-db", async (c) => {
   return await searchImagesDB(c)
 })
 
+// GET /search-cards (public endpoint - Meilisearch)
+app.route("/search-cards", searchCards)
+
 // POST /reindex (requires admin authentication)
 app.post("/reindex", reindexAuthMiddleware, async (c) => {
   await umami.track("reindex_attempt")
@@ -75,6 +80,9 @@ app.get("/images/:key", async (c) => {
 
 // Routes for tags
 app.route("/tags", tags)
+
+// Routes for cards
+app.route("/cards", cards)
 
 serve(
   {
