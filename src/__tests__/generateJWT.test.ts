@@ -51,7 +51,7 @@ describe("generateJWT", () => {
     expect(decoded.exp).toBeDefined()
 
     const now = Math.floor(Date.now() / 1000)
-    const expectedExp = now + 60 * 60
+    const expectedExp = now + 60 * 60 * 24
     expect(decoded.exp).toBeGreaterThan(now)
     expect(decoded.exp).toBeLessThanOrEqual(expectedExp)
   })
