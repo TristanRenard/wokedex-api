@@ -1,10 +1,9 @@
 import { MeiliSearch, type Index, type RecordAny } from "meilisearch"
+import type { Image } from "../db/schema.js"
 import umami from "../umami.js"
 
 const MEILISEARCH_URL = process.env.MEILISEARCH_URL ?? "http://localhost:7700"
-const MEILISEARCH_MASTER_KEY =
-  process.env.MEILISEARCH_MASTER_KEY ??
-  "8e5977f29a6f9c241fa7d49990fb96dcbacc7f03ca66e1c23965de7da499c5da"
+const MEILISEARCH_MASTER_KEY = process.env.MEILISEARCH_MASTER_KEY ?? ""
 
 if (!MEILISEARCH_URL || !MEILISEARCH_MASTER_KEY) {
   throw new Error("Meilisearch environment variables not configured")
@@ -15,7 +14,8 @@ const meilisearchClient = new MeiliSearch({
   apiKey: MEILISEARCH_MASTER_KEY,
 })
 const IMAGES_INDEX_NAME = "images"
-const CARDS_INDEX_NAME = "woke_cards"
+const CARDS_INDEX_NAME = "cards"
+const TAGS_INDEX_NAME = "tags"
 
 export interface ImageDocument {
   id: string
@@ -49,6 +49,13 @@ export interface CardDocument {
   ownerUsername: string
   createdAt: string
   updatedAt: string
+  image: Image
+}
+
+export interface TagDocument {
+  id: string
+  name: string
+  keywords?: string[]
 }
 
 export const ensureImagesIndex = async (): Promise<void> => {
@@ -252,6 +259,7 @@ export const ensureCardsIndex = async (): Promise<void> => {
         "words",
         "typo",
         "proximity",
+
         "attribute",
         "sort",
         "exactness",
@@ -307,7 +315,7 @@ export const searchCards = async (
   query: string,
   filters?: string,
   limit: number = 20,
-): Promise<CardDocument[]> => {
+): Promise<{ hits: CardDocument[]; estimatedTotalHits: number }> => {
   try {
     await umami.track("meilisearch_search_cards_started", {
       query: query === "*" ? "all" : query.substring(0, 50),
@@ -328,7 +336,10 @@ export const searchCards = async (
       estimatedTotalHits: searchResult.estimatedTotalHits?.toString() ?? "0",
     })
 
-    return searchResult.hits as CardDocument[]
+    return {
+      hits: searchResult.hits as CardDocument[],
+      estimatedTotalHits: searchResult.estimatedTotalHits,
+    }
   } catch (error) {
     await umami.track("meilisearch_search_cards_error", {
       error: error instanceof Error ? error.message : "unknown",
@@ -369,6 +380,16 @@ export const deleteCardsIndex = async (): Promise<void> => {
   }
 }
 
+export const deleteCardFromIndex = async (id: string): Promise<void> => {
+  try {
+    await meilisearchClient.index(CARDS_INDEX_NAME).deleteDocument(id)
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error("Meilisearch: Error deleting card from index:", error)
+    throw error
+  }
+}
+
 export const reindexAllCards = async (
   cardDocs: CardDocument[],
 ): Promise<void> => {
@@ -379,9 +400,6 @@ export const reindexAllCards = async (
 
     await ensureCardsIndex()
 
-    const index = meilisearchClient.index(CARDS_INDEX_NAME)
-    await index.addDocuments(cardDocs)
-
     await umami.track("meilisearch_reindex_cards_completed", {
       documentsCount: cardDocs.length.toString(),
     })
@@ -389,6 +407,199 @@ export const reindexAllCards = async (
     await umami.track("meilisearch_reindex_cards_error", {
       error: error instanceof Error ? error.message : "unknown",
       documentsCount: cardDocs.length.toString(),
+    })
+    throw error
+  }
+}
+
+export const ensureTagsIndex = async (): Promise<void> => {
+  try {
+    await umami.track("meilisearch_ensure_tags_index_started", {
+      indexName: TAGS_INDEX_NAME,
+    })
+
+    let index: Index<RecordAny> | null = null
+
+    try {
+      index = meilisearchClient.index(TAGS_INDEX_NAME)
+      const rawInfo = await index.getRawInfo()
+
+      if (!rawInfo.primaryKey) {
+        await meilisearchClient.deleteIndex(TAGS_INDEX_NAME)
+        throw new Error("Need to recreate index with primary key")
+      }
+    } catch (error) {
+      await umami.track("meilisearch_ensure_tags_index_error", {
+        error: error instanceof Error ? error.message : "unknown",
+        indexName: TAGS_INDEX_NAME,
+      })
+      const createResult = await meilisearchClient.createIndex(
+        TAGS_INDEX_NAME,
+        {
+          primaryKey: "id",
+        },
+      )
+
+      await meilisearchClient.tasks.waitForTask(createResult.taskUid)
+
+      index = meilisearchClient.index(TAGS_INDEX_NAME)
+
+      await umami.track("meilisearch_ensure_tags_index_created", {
+        indexName: TAGS_INDEX_NAME,
+      })
+    }
+
+    const settingsTask = await index.updateSettings({
+      searchableAttributes: ["name", "keywords"],
+      filterableAttributes: ["user"],
+      sortableAttributes: ["createdAt"],
+      rankingRules: [
+        "words",
+        "typo",
+        "proximity",
+        "attribute",
+        "sort",
+        "exactness",
+      ],
+    })
+
+    await meilisearchClient.tasks.waitForTask(settingsTask.taskUid)
+
+    await umami.track("meilisearch_tags_index_settings_updated", {
+      indexName: TAGS_INDEX_NAME,
+    })
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error("Meilisearch: Error ensuring tags index:", error)
+    await umami.track("meilisearch_ensure_tags_index_error", {
+      error: error instanceof Error ? error.message : "unknown",
+      indexName: TAGS_INDEX_NAME,
+    })
+    throw error
+  }
+}
+
+export const indexTag = async (tagDoc: TagDocument): Promise<void> => {
+  try {
+    await umami.track("meilisearch_index_tag_started", {
+      tagId: tagDoc.id,
+      name: tagDoc.name,
+    })
+
+    await ensureTagsIndex()
+
+    const index = meilisearchClient.index(TAGS_INDEX_NAME)
+    const task = await index.addDocuments([tagDoc])
+    const finalTask = await meilisearchClient.tasks.waitForTask(task.taskUid)
+
+    if (finalTask.status !== "succeeded") {
+      throw new Error(`Task failed with status: ${finalTask.status}`)
+    }
+
+    await umami.track("meilisearch_tag_indexed", { tagId: tagDoc.id })
+  } catch (error) {
+    await umami.track("meilisearch_index_tag_error", {
+      error: error instanceof Error ? error.message : "unknown",
+      tagId: tagDoc.id,
+    })
+    throw error
+  }
+}
+
+export const searchTags = async (
+  query: string,
+  filters?: string,
+  limit: number = 20,
+): Promise<TagDocument[]> => {
+  try {
+    await umami.track("meilisearch_search_tags_started", {
+      query: query === "*" ? "all" : query.substring(0, 50),
+      hasFilters: filters ? "true" : "false",
+      limit: limit.toString(),
+    })
+
+    const index = meilisearchClient.index(TAGS_INDEX_NAME)
+    const searchResult = await index.search(query, {
+      filter: filters,
+      limit,
+      sort: ["createdAt:desc"],
+    })
+
+    await umami.track("meilisearch_search_tags_completed", {
+      resultsCount: searchResult.hits.length.toString(),
+      query: query === "*" ? "all" : query.substring(0, 50),
+      estimatedTotalHits: searchResult.estimatedTotalHits?.toString() ?? "0",
+    })
+
+    return searchResult.hits as TagDocument[]
+  } catch (error) {
+    await umami.track("meilisearch_search_tags_error", {
+      error: error instanceof Error ? error.message : "unknown",
+      query: query === "*" ? "all" : query.substring(0, 50),
+    })
+    throw error
+  }
+}
+
+export const clearTagsIndex = async (): Promise<void> => {
+  try {
+    await umami.track("meilisearch_clear_tags_index_started", {
+      indexName: TAGS_INDEX_NAME,
+    })
+
+    const index = meilisearchClient.index(TAGS_INDEX_NAME)
+    await index.deleteAllDocuments()
+
+    await umami.track("meilisearch_tags_index_cleared", {
+      indexName: TAGS_INDEX_NAME,
+    })
+  } catch (error) {
+    await umami.track("meilisearch_clear_tags_index_error", {
+      error: error instanceof Error ? error.message : "unknown",
+      indexName: TAGS_INDEX_NAME,
+    })
+    throw error
+  }
+}
+
+export const deleteTagsIndex = async (): Promise<void> => {
+  try {
+    await meilisearchClient.deleteIndex(TAGS_INDEX_NAME)
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error("Meilisearch: Error deleting tags index:", error)
+    throw error
+  }
+}
+
+export const deleteTagFromIndex = async (id: string): Promise<void> => {
+  try {
+    await meilisearchClient.index(TAGS_INDEX_NAME).deleteDocument(id)
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error("Meilisearch: Error deleting tag from index:", error)
+    throw error
+  }
+}
+
+export const reindexAllTags = async (tagDocs: TagDocument[]): Promise<void> => {
+  try {
+    await umami.track("meilisearch_reindex_tags_started", {
+      documentsCount: tagDocs.length.toString(),
+    })
+
+    await ensureTagsIndex()
+
+    const index = meilisearchClient.index(TAGS_INDEX_NAME)
+    await index.addDocuments(tagDocs)
+
+    await umami.track("meilisearch_reindex_tags_completed", {
+      documentsCount: tagDocs.length.toString(),
+    })
+  } catch (error) {
+    await umami.track("meilisearch_reindex_tags_error", {
+      error: error instanceof Error ? error.message : "unknown",
+      documentsCount: tagDocs.length.toString(),
     })
     throw error
   }

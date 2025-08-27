@@ -22,8 +22,12 @@ cards.put("/:id", authMiddleware, updateCardController as any)
 cards.delete("/:id", authMiddleware, deleteCardController as any)
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-cards.get("/:id", optionalAuthMiddleware, getCardByIdController as any)
+cards.get("/id/:id", optionalAuthMiddleware, getCardByIdController as any)
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-cards.get("/slug/:slug", optionalAuthMiddleware, getCardBySlugController as any)
+cards.get(
+  "/:userName/:cardSlug",
+  optionalAuthMiddleware,
+  getCardBySlugController as any,
+)
 
 export default cards

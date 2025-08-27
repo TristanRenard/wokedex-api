@@ -38,3 +38,5 @@ dist/
 
 # test
 coverage/
+localhost.key
+localhost.crt

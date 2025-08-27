@@ -22,11 +22,14 @@ export const searchCardsController = async (c: Context): Promise<Response> => {
 
     await umami.track("search_cards_controller_completed", {
       query: query === "*" ? "all" : query.substring(0, 50),
-      resultsCount: cards.length.toString(),
+      resultsCount: cards.hits.length.toString(),
       hasFilters: filters ? "true" : "false",
     })
 
-    return c.json(cards, 200)
+    return c.json(
+      { cards: cards.hits, estimatedTotalHits: cards.estimatedTotalHits },
+      200,
+    )
   } catch (error) {
     await umami.track("search_cards_controller_error", {
       error: error instanceof Error ? error.message : "unknown",

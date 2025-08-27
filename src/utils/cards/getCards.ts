@@ -1,6 +1,7 @@
-import { and, sql } from "drizzle-orm"
+import { and, eq, sql } from "drizzle-orm"
+import { alias } from "drizzle-orm/pg-core"
 import { db } from "../../db/index.js"
-import { cards, type Card } from "../../db/schema.js"
+import { cards, images, tags, users, type Card } from "../../db/schema.js"
 import umami from "../../umami.js"
 
 interface GetCardsParams {
@@ -10,6 +11,14 @@ interface GetCardsParams {
   offset?: number
 }
 
+const tag1 = alias(tags, "tag1")
+const tag2 = alias(tags, "tag2")
+const comp1Tag = alias(tags, "comp1Tag")
+const comp2Tag = alias(tags, "comp2Tag")
+const comp3Tag = alias(tags, "comp3Tag")
+const comp4Tag = alias(tags, "comp4Tag")
+const owner = alias(users, "owner")
+const image = alias(images, "image")
 const getCards = async ({
   ownerId,
   status,
@@ -34,9 +43,28 @@ const getCards = async ({
       conditions.push(sql`${cards.status} = ${status}`)
     }
 
+    const baseSelect = {
+      card: cards,
+      tag1,
+      tag2,
+      comp1Tag,
+      comp2Tag,
+      comp3Tag,
+      comp4Tag,
+      owner,
+      image,
+    }
     const result = await db
-      .select()
+      .select(baseSelect)
       .from(cards)
+      .leftJoin(tag1, eq(cards.tag1, tag1.id))
+      .leftJoin(tag2, eq(cards.tag2, tag2.id))
+      .leftJoin(comp1Tag, eq(cards.competence1Tag, comp1Tag.id))
+      .leftJoin(comp2Tag, eq(cards.competence2Tag, comp2Tag.id))
+      .leftJoin(comp3Tag, eq(cards.competence3Tag, comp3Tag.id))
+      .leftJoin(comp4Tag, eq(cards.competence4Tag, comp4Tag.id))
+      .leftJoin(owner, eq(cards.ownerId, owner.id))
+      .leftJoin(image, eq(cards.imageId, image.id))
       .where(conditions.length > 0 ? and(...conditions) : undefined)
       .orderBy(cards.createdAt)
       .limit(limit)
@@ -48,8 +76,30 @@ const getCards = async ({
       hasStatus: status ? "true" : "false",
     })
 
-    return result
+    // eslint-disable-next-line no-shadow
+    return result.map(
+      ({
+        card,
+        image,
+        owner,
+        tag1,
+        tag2,
+        comp1Tag,
+        comp2Tag,
+        comp3Tag,
+        comp4Tag,
+      }) => ({
+        ...card,
+        image,
+        owner,
+        tags: [tag1, tag2, comp1Tag, comp2Tag, comp3Tag, comp4Tag].filter(
+          Boolean,
+        ),
+      }),
+    )
   } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(error)
     await umami.track("get_cards_error", {
       error: error instanceof Error ? error.message : "unknown",
     })

@@ -183,7 +183,7 @@ export const getCardBySlugController = async (
   try {
     await umami.track("get_card_by_slug_controller_started")
 
-    const slug = c.req.param("slug")
+    const slug = `${c.req.param("userName")}/${c.req.param("cardSlug")}`
 
     if (!slug) {
       await umami.track("get_card_by_slug_controller_error", {

@@ -102,6 +102,7 @@ const reindexController = async (
           acidity: card.acidity ?? 0,
           based: card.based ?? 0,
           da: card.da ?? 0,
+          image: card.image ?? {},
           doom: card.doom ?? 0,
           competence1: card.competence1,
           competence2: card.competence2,

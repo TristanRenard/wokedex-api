@@ -1,22 +1,15 @@
 import { Hono } from "hono"
 import {
   createTagController,
-  deleteTagController,
-  getTagByIdController,
+  getMyTags,
   getTagsController,
 } from "../controllers/tagsController.js"
-import { authMiddleware } from "../middleware/auth.js"
-import { optionalAuthMiddleware } from "../middleware/optionalAuth.js"
+import { authMiddleware } from "./reindex.js"
 
 const tags = new Hono()
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-tags.get("/", authMiddleware, getTagsController as any)
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-tags.get("/:id", optionalAuthMiddleware, getTagByIdController as any)
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-tags.post("/", authMiddleware, createTagController as any)
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-tags.delete("/:id", authMiddleware, deleteTagController as any)
+tags.post("/", authMiddleware, createTagController as never)
+tags.get("/myTags", authMiddleware, getMyTags as never)
+tags.get("/", getTagsController as never)
 
 export default tags

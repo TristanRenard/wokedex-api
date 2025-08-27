@@ -12,13 +12,15 @@ const verify = async (c: Context): Promise<HandlerResponse<number>> => {
 
   try {
     const jwt = await verifyController(username, verificationToken)
+    const isDev = process.env.NODE_ENV === "development"
 
-    if (process.env.NODE_ENV === "development") {
+    if (isDev) {
       setCookie(c, "wokedexSession", jwt, {
         httpOnly: true,
-        secure: false,
+        secure: true,
+        sameSite: "none",
         maxAge: 864000,
-        sameSite: "strict",
+        path: "/",
       })
     } else {
       await setSignedCookie(
@@ -30,12 +32,13 @@ const verify = async (c: Context): Promise<HandlerResponse<number>> => {
           httpOnly: true,
           secure: true,
           maxAge: 864000,
-          sameSite: "strict",
+          sameSite: "lax",
+          domain: process.env.DOMAIN,
         },
       )
     }
 
-    return c.json({ message: "email sent", jwt }, 200)
+    return c.json({ message: "email sent" }, 200)
   } catch (error: unknown) {
     return c.json({ message: (error as Error).message }, 500)
   }

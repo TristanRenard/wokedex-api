@@ -41,16 +41,16 @@ const loginController = async (
           {
             key: "verifyURL",
             value: existingUser
-              ? `https://wokedex.com/verify/${verificationToken}`
-              : `https://wokedex.com/verify-new-user/${verificationToken}`,
+              ? `${process.env.FRONTEND_URL}/verify/${verificationToken}`
+              : `${process.env.FRONTEND_URL}/set-username/${verificationToken}`,
           },
           {
             key: "changeUsernameURL",
-            value: `https://wokedex.com/change-username/${verificationToken}`,
+            value: `${process.env.FRONTEND_URL}/set-username/${verificationToken}`,
           },
           {
             key: "deleteAccountURL",
-            value: `https://wokedex.com/delete-account/${verificationToken}`,
+            value: `${process.env.FRONTEND_URL}/delete-account/${verificationToken}`,
           },
         ],
         template: loginTemplate,
