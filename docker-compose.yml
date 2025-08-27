@@ -102,6 +102,13 @@ services:
       timeout: 10s
       retries: 3
 
+  hono-app:
+    build: .
+    container_name: hono_app
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
 volumes:
   postgres_data:
     driver: local
