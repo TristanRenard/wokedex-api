@@ -1,7 +1,17 @@
+/* eslint-disable no-shadow */
 import { and, eq, sql } from "drizzle-orm"
 import { alias } from "drizzle-orm/pg-core"
 import { db } from "../../db/index.js"
-import { cards, images, tags, users, type Card } from "../../db/schema.js"
+import {
+  cards,
+  images,
+  tags,
+  users,
+  type Card,
+  type Image,
+  type Tag,
+  type User,
+} from "../../db/schema.js"
 import umami from "../../umami.js"
 
 interface GetCardsParams {
@@ -9,6 +19,11 @@ interface GetCardsParams {
   status?: string
   limit?: number
   offset?: number
+}
+interface CardWithRelations extends Card {
+  image: Image | null
+  owner: User | null
+  tags: (Tag | null)[]
 }
 
 const tag1 = alias(tags, "tag1")
@@ -24,7 +39,7 @@ const getCards = async ({
   status,
   limit = 50,
   offset = 0,
-}: GetCardsParams = {}): Promise<Card[]> => {
+}: GetCardsParams = {}): Promise<CardWithRelations[]> => {
   try {
     await umami.track("get_cards_started", {
       hasOwnerId: ownerId ? "true" : "false",
@@ -76,7 +91,6 @@ const getCards = async ({
       hasStatus: status ? "true" : "false",
     })
 
-    // eslint-disable-next-line no-shadow
     return result.map(
       ({
         card,

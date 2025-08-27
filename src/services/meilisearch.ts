@@ -49,7 +49,7 @@ export interface CardDocument {
   ownerUsername: string
   createdAt: string
   updatedAt: string
-  image: Image
+  image?: Image | null
 }
 
 export interface TagDocument {

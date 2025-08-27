@@ -23,10 +23,11 @@ cards.delete("/:id", authMiddleware, deleteCardController as any)
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 cards.get("/id/:id", optionalAuthMiddleware, getCardByIdController as any)
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 cards.get(
   "/:userName/:cardSlug",
   optionalAuthMiddleware,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getCardBySlugController as any,
 )
 
