@@ -1,19 +1,21 @@
-# Dockerfile
 FROM node:20-alpine
 
 WORKDIR /app
 
-# Copie des dépendances
+# Copier uniquement les fichiers nécessaires d'abord (pour le cache)
 COPY package*.json ./
 
-# Installation
-RUN npm install --production
+# Installer toutes les deps (dev aussi, car il y a tsc)
+RUN npm install
 
-# Copie du code
+# Copier le code source
 COPY . .
 
-# Expose le port HTTP
+# Build TypeScript -> dist/
+RUN npm run build
+
+# Exposer le port HTTP
 EXPOSE 3000
 
-# Lancement de l'app
-CMD ["node", "server.js"]
+# Lancer l'app compilée
+CMD ["npm", "start"]
