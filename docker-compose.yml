@@ -109,8 +109,8 @@ services:
       - "3000:3000"
     restart: unless-stopped
     volumes:
-      - ./localhost.key:/app/localhost.key:ro
-      - ./localhost.crt:/app/localhost.crt:ro
+      - ./{SSL_KEY_PATH}:/app/{SSL_KEY_PATH}:ro
+      - ./{SSL_CERT_PATH}:/app/{SSL_CERT_PATH}:ro
 
 volumes:
   postgres_data:
