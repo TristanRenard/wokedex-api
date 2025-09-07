@@ -40,3 +40,5 @@ dist/
 coverage/
 localhost.key
 localhost.crt
+origin.pem
+origin.key

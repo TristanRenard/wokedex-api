@@ -1,21 +1,35 @@
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+# Installer pnpm
+RUN npm install -g pnpm
+
+# Copier uniquement ce qui est nécessaire pour l’install
+COPY package.json pnpm-lock.yaml ./
+
+# Installer toutes les dépendances (dev incluses pour tsc)
+RUN pnpm install
+
+# Copier le reste du code
+COPY . .
+
+# Build TypeScript
+RUN pnpm run build
+
+# Étape finale pour une image plus légère
 FROM node:20-alpine
 
 WORKDIR /app
 
-# Copier uniquement les fichiers nécessaires d'abord (pour le cache)
-COPY package*.json ./
+RUN npm install -g pnpm
 
-# Installer toutes les deps (dev aussi, car il y a tsc)
-RUN npm install
+# Copier seulement les fichiers nécessaires à l’exécution
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --prod --ignore-scripts
 
-# Copier le code source
-COPY . .
+COPY --from=builder /app/dist ./dist
 
-# Build TypeScript -> dist/
-RUN npm run build
-
-# Exposer le port HTTP
 EXPOSE 3000
 
-# Lancer l'app compilée
-CMD ["npm", "start"]
+CMD ["pnpm","run","start"]
