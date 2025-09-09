@@ -17,7 +17,8 @@ const verify = async (c: Context): Promise<HandlerResponse<number>> => {
     if (isDev) {
       setCookie(c, "wokedexSession", jwt, {
         httpOnly: true,
-        sameSite: "None",
+        secure: false,
+        sameSite: "lax",
         maxAge: 60 * 60 * 24,
         path: "/",
       })
@@ -32,9 +33,10 @@ const verify = async (c: Context): Promise<HandlerResponse<number>> => {
         {
           httpOnly: true,
           secure: true,
-          maxAge: 864000,
           sameSite: "lax",
+          maxAge: 60 * 60 * 24 * 10,
           domain: process.env.DOMAIN,
+          path: "/",
         },
       )
     }
