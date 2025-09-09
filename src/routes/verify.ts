@@ -1,5 +1,5 @@
 import type { Context } from "hono"
-import { setCookie, setSignedCookie } from "hono/cookie"
+import { getCookie, setCookie, setSignedCookie } from "hono/cookie"
 import type { HandlerResponse } from "hono/types"
 import verifyController from "../controllers/verifyController.js"
 
@@ -16,12 +16,12 @@ const verify = async (c: Context): Promise<HandlerResponse<number>> => {
 
     if (isDev) {
       setCookie(c, "wokedexSession", jwt, {
-        httpOnly: true,
-        secure: false,
-        sameSite: "none",
+        httpOnly: false,
         maxAge: 60 * 60 * 24,
         path: "/",
       })
+      // eslint-disable-next-line no-console
+      console.log(getCookie(c))
     } else {
       await setSignedCookie(
         c,
