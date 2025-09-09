@@ -103,6 +103,8 @@ services:
   hono-app:
     build: .
     container_name: hono_app
+    networks:
+      - wokedex-network
     env_file:
       - .env
     ports:
