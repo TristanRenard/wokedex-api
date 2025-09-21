@@ -11,6 +11,7 @@ const searchImagesController = async (
 
     const query = c.req.query("q") ?? "*"
     const filters = c.req.query("filters")
+    const page = Number(c.req.query("page") ?? 1)
     const limit = parseInt(c.req.query("limit") ?? "20", 10)
 
     await umami.track("search_controller_parameters", {
@@ -34,9 +35,9 @@ const searchImagesController = async (
     }
 
     await umami.track("search_controller_executing_search")
-    const results = await searchImages(query, filters, limit)
+    const results = await searchImages(query, filters, limit, page)
     await umami.track("search_controller_search_completed", {
-      resultsCount: results.length.toString(),
+      resultsCount: results.totalHits.toString(),
       query: query === "*" ? "all" : query.substring(0, 50),
     })
 
@@ -45,8 +46,8 @@ const searchImagesController = async (
         message: "Search completed successfully",
         data: {
           query,
-          results,
-          total: results.length,
+          results: results.hits,
+          total: results.totalHits,
         },
       },
       200,

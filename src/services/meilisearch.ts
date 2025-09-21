@@ -56,6 +56,8 @@ export interface TagDocument {
   id: string
   name: string
   keywords?: string[]
+  username?: string
+  style?: unknown
 }
 
 export const ensureImagesIndex = async (): Promise<void> => {
@@ -118,7 +120,12 @@ export const searchImages = async (
   query: string,
   filters?: string,
   limit: number = 20,
-): Promise<ImageDocument[]> => {
+  page: number = 1,
+): Promise<{
+  hits: ImageDocument[]
+  totalHits: number
+  // eslint-disable-next-line max-params
+}> => {
   try {
     await umami.track("meilisearch_search_started", {
       query: query === "*" ? "all" : query.substring(0, 50),
@@ -130,16 +137,20 @@ export const searchImages = async (
     const searchResult = await index.search(query, {
       filter: filters,
       limit,
+      page,
       sort: ["uploadedAt:desc"],
     })
 
     await umami.track("meilisearch_search_completed", {
       resultsCount: searchResult.hits.length.toString(),
       query: query === "*" ? "all" : query.substring(0, 50),
-      estimatedTotalHits: searchResult.estimatedTotalHits?.toString() ?? "0",
+      totalHits: searchResult.totalHits?.toString() ?? "0",
     })
 
-    return searchResult.hits as ImageDocument[]
+    return {
+      hits: searchResult.hits as ImageDocument[],
+      totalHits: searchResult.totalHits,
+    }
   } catch (error) {
     await umami.track("meilisearch_search_error", {
       error: error instanceof Error ? error.message : "unknown",
@@ -400,6 +411,10 @@ export const reindexAllCards = async (
 
     await ensureCardsIndex()
 
+    const index = meilisearchClient.index(CARDS_INDEX_NAME)
+    const task = await index.addDocuments(cardDocs)
+    await meilisearchClient.tasks.waitForTask(task.taskUid)
+
     await umami.track("meilisearch_reindex_cards_completed", {
       documentsCount: cardDocs.length.toString(),
     })
@@ -451,7 +466,7 @@ export const ensureTagsIndex = async (): Promise<void> => {
 
     const settingsTask = await index.updateSettings({
       searchableAttributes: ["name", "keywords"],
-      filterableAttributes: ["user"],
+      // FilterableAttributes: ["user"],
       sortableAttributes: ["createdAt"],
       rankingRules: [
         "words",

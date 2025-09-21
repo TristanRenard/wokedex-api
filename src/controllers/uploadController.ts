@@ -19,7 +19,7 @@ const uploadController = async (
   c: AuthenticatedContext,
 ): Promise<HandlerResponse<number>> => {
   try {
-    await umami.track("upload_controller_started", { userId: c.user.id })
+    await umami.track("upload_controller_started", { userId: c?.user?.id || 0 })
 
     const formData = await c.req.formData()
     const file = formData.get("image") as File | null

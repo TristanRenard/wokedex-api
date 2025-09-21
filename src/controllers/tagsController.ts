@@ -138,13 +138,14 @@ export const getTagByIdController = async (
 
 export const getTagsController = async (
   c: AuthenticatedContext,
-  database = dbInstance,
 ): Promise<Response> => {
+  const db = dbInstance
+
   try {
     await umami.track("get_tags_controller_started")
 
-    const userId = c.user.id
-    const tags = await getTags({ userId, database })
+    const userId = c?.user?.id
+    const tags = await getTags({ userId, database: db })
 
     await umami.track("get_tags_controller_completed", {
       tagsCount: tags.length.toString(),

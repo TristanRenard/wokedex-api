@@ -7,7 +7,7 @@ const verify = async (c: Context): Promise<HandlerResponse<number>> => {
   const { username, verificationToken } = await c.req.json()
 
   if (!verificationToken) {
-    return c.json({ message: "email is required" }, 400)
+    return c.json({ message: "invalid Token" }, 400)
   }
 
   try {
@@ -18,7 +18,7 @@ const verify = async (c: Context): Promise<HandlerResponse<number>> => {
       setCookie(c, "wokedexSession", jwt, {
         httpOnly: true,
         secure: false,
-        sameSite: "lax",
+        sameSite: "none",
         maxAge: 60 * 60 * 24,
         path: "/",
       })

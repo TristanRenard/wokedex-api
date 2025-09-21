@@ -3,14 +3,19 @@ import type { AuthenticatedContext } from "../middleware/auth.js"
 import {
   clearCardsIndex,
   clearImagesIndex,
+  clearTagsIndex,
+  ensureTagsIndex,
   reindexAllCards,
   reindexAllImages,
+  reindexAllTags,
   type CardDocument,
   type ImageDocument,
+  type TagDocument,
 } from "../services/meilisearch.js"
 import umami from "../umami.js"
 import getCards from "../utils/cards/getCards.js"
 import getAllImages from "../utils/images/getAllImages.js"
+import getAllTags from "../utils/tags/getAllTags.js"
 import getUserById from "../utils/users/getUserById.js"
 
 const reindexController = async (
@@ -72,6 +77,20 @@ const reindexController = async (
     await umami.track("reindex_controller_images_reindexing_completed", {
       indexedCount: images.length.toString(),
     })
+
+    await ensureTagsIndex()
+
+    const tags = await getAllTags()
+    const tagsDocuments = tags.map((tag) => ({
+      id: tag.tags.id,
+      name: tag.tags.name,
+      keywords: tag.tags.keywords,
+      username: tag.user?.username,
+      style: tag.tags.style,
+    })) as TagDocument[]
+
+    await clearTagsIndex()
+    await reindexAllTags(tagsDocuments)
 
     await umami.track("reindex_controller_fetching_cards")
     const cards = await getCards()

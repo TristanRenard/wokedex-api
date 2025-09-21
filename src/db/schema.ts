@@ -109,3 +109,27 @@ export type CardReport = typeof cardReports.$inferSelect
 export type NewCardReport = typeof cardReports.$inferInsert
 export type UserReport = typeof userReports.$inferSelect
 export type NewUserReport = typeof userReports.$inferInsert
+
+export interface TagWithAuthor {
+  user: {
+    id: string
+    username: string | null
+    hash: string
+    verificationToken: string | null
+    verificationTokenExpiresAt: Date | null
+    role: number
+    verifiedAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    lastLogin: Date | null
+  } | null
+  tags: {
+    id: string
+    name: string
+    user: string | null
+    keywords: string[]
+    style: unknown
+    createdAt: Date
+    updatedAt: Date
+  }
+}
