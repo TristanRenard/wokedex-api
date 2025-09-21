@@ -102,6 +102,9 @@ services:
 
   hono-app:
     build: .
+  depends_on:
+    postgres:
+      condition: service_healthy
     container_name: hono_app
     networks:
       - wokedex-network
