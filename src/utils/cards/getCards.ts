@@ -1,18 +1,9 @@
-/* eslint-disable no-shadow */
 import { and, eq, sql } from "drizzle-orm"
 import { alias } from "drizzle-orm/pg-core"
 import { db } from "../../db/index.js"
-import {
-  cards,
-  images,
-  tags,
-  users,
-  type Card,
-  type Image,
-  type Tag,
-  type User,
-} from "../../db/schema.js"
+import { cards, images, tags, users } from "../../db/schema.js"
 import umami from "../../umami.js"
+import type { CardWithTags } from "./getCardBySlug.js"
 
 interface GetCardsParams {
   ownerId?: string
@@ -20,11 +11,11 @@ interface GetCardsParams {
   limit?: number
   offset?: number
 }
-interface CardWithRelations extends Card {
-  image: Image | null
-  owner: User | null
-  tags: (Tag | null)[]
-}
+// Interface CardWithRelations extends Card {
+//   image: Image | null
+//   owner: User | null
+//   tags: (Tag | null)[]
+// }
 
 const tag1 = alias(tags, "tag1")
 const tag2 = alias(tags, "tag2")
@@ -39,7 +30,7 @@ const getCards = async ({
   status,
   limit = 50,
   offset = 0,
-}: GetCardsParams = {}): Promise<CardWithRelations[]> => {
+}: GetCardsParams = {}): Promise<CardWithTags[]> => {
   try {
     await umami.track("get_cards_started", {
       hasOwnerId: ownerId ? "true" : "false",
@@ -91,26 +82,19 @@ const getCards = async ({
       hasStatus: status ? "true" : "false",
     })
 
-    return result.map(
-      ({
-        card,
-        image,
-        owner,
-        tag1,
-        tag2,
-        comp1Tag,
-        comp2Tag,
-        comp3Tag,
-        comp4Tag,
-      }) => ({
-        ...card,
-        image,
-        owner,
-        tags: [tag1, tag2, comp1Tag, comp2Tag, comp3Tag, comp4Tag].filter(
-          Boolean,
-        ),
-      }),
-    )
+    const r = result.map((cardData) => ({
+      ...cardData.card,
+      tag1: cardData.tag1,
+      tag2: cardData.tag2,
+      comp1Tag: cardData.comp1Tag,
+      comp2Tag: cardData.comp2Tag,
+      comp3Tag: cardData.comp3Tag,
+      comp4Tag: cardData.comp4Tag,
+      owner: cardData.owner?.username,
+      image: cardData.image,
+    })) as never as CardWithTags[]
+
+    return r
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error(error)

@@ -1,11 +1,12 @@
-import { readFileSync } from "fs"
 import { Hono } from "hono"
-import { createServer, type ServerOptions } from "https"
+import { createServer } from "http"
 import type { AuthenticatedContext } from "./middleware/auth.js"
 import cards from "./routes/cards.js"
 import images from "./routes/images.js"
 import login from "./routes/login.js"
-import reindex, { authMiddleware as reindexAuthMiddleware } from "./routes/reindex.js"
+import reindex, {
+  authMiddleware as reindexAuthMiddleware,
+} from "./routes/reindex.js"
 import searchCards from "./routes/search-cards.js"
 import searchImages from "./routes/search-image.js"
 import searchImagesDB from "./routes/searchDB-image.js"
@@ -19,18 +20,20 @@ const app = new Hono()
 // Middleware CORS
 // eslint-disable-next-line consistent-return
 app.use("*", async (c, next) => {
-  const origin = c.req.header("origin") ?? ""
-  const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(",") ?? ["*"]
+  const origin = c.req.header("Origin") ?? ""
 
-  if (allowedOrigins.includes(origin)) {
-    c.res.headers.set("Access-Control-Allow-Origin", origin)
-    c.res.headers.set("Access-Control-Allow-Credentials", "true")
-    c.res.headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-    c.res.headers.set(
-      "Access-Control-Allow-Headers",
-      "Content-Type, Authorization, X-API-Key"
-    )
-  }
+  c.res.headers.set("Access-Control-Allow-Origin", origin)
+  c.res.headers.set("Vary", "Origin")
+
+  c.res.headers.set(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, OPTIONS",
+  )
+  c.res.headers.set(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization, X-API-Key",
+  )
+  c.res.headers.set("Access-Control-Allow-Credentials", "true")
 
   if (c.req.method === "OPTIONS") {
     return c.text("", 200)
@@ -57,7 +60,6 @@ app.post("/verify", async (c) => {
 
   return verify(c)
 })
-
 
 //@ts-expect-error upload
 app.post("/upload", authMiddleware, async (c: AuthenticatedContext) => {
@@ -96,13 +98,9 @@ app.get("/images/:key", async (c) => {
 app.route("/tags", tags)
 app.route("/cards", cards)
 
-// Serveur HTTPS
-const tlsOptions: ServerOptions = {
-  key: readFileSync(process.env.SSL_KEY_PATH ?? "./localhost.key"),
-  cert: readFileSync(process.env.SSL_CERT_PATH ?? "./localhost.crt")
-}
-const server = createServer(tlsOptions, (req, res) => {
-  ; (async () => {
+// Serveur HTTP
+const server = createServer((req, res) => {
+  ;(async () => {
     let body: Buffer | null = null
 
     if (req.method && req.method !== "GET" && req.method !== "HEAD") {
@@ -123,12 +121,12 @@ const server = createServer(tlsOptions, (req, res) => {
     }
 
     const response = await app.fetch(
-      new Request(`https://localhost:3000${req.url ?? ""}`, {
+      new Request(`http://localhost:3000${req.url ?? ""}`, {
         method: req.method,
         headers,
         //@ts-expect-error bodyType
-        body: body ?? undefined
-      })
+        body: body ?? undefined,
+      }),
     )
 
     for (const [key, value] of response.headers) {
@@ -140,13 +138,15 @@ const server = createServer(tlsOptions, (req, res) => {
     res.end(Buffer.from(responseBody))
   })().catch((err) => {
     res.statusCode = 500
-    res.end(`Internal Server Error: ${err instanceof Error ? err.message : String(err)}`)
+    res.end(
+      `Internal Server Error: ${err instanceof Error ? err.message : String(err)}`,
+    )
   })
 })
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 server.listen(3000, async () => {
   // eslint-disable-next-line no-console
-  console.log("API running on https://localhost:3000")
+  console.log("API running on http://localhost:3000")
   await umami.track("server_started")
 })

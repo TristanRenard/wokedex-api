@@ -4,6 +4,7 @@ import {
   deleteCardController,
   getCardByIdController,
   getCardBySlugController,
+  getCardsByUser,
   getCardsController,
   updateCardController,
 } from "../controllers/cardsController.js"
@@ -23,6 +24,8 @@ cards.delete("/:id", authMiddleware, deleteCardController as any)
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 cards.get("/id/:id", optionalAuthMiddleware, getCardByIdController as any)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+cards.get("/user/:userName", optionalAuthMiddleware, getCardsByUser as any)
 
 cards.get(
   "/:userName/:cardSlug",

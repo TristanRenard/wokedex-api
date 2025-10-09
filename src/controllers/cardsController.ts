@@ -1,3 +1,6 @@
+import { eq } from "drizzle-orm"
+import { db } from "../db/index.js"
+import { users } from "../db/schema.js"
 import type { AuthenticatedContext } from "../middleware/auth.js"
 import type { OptionalAuthContext } from "../middleware/optionalAuth.js"
 import umami from "../umami.js"
@@ -213,6 +216,55 @@ export const getCardBySlugController = async (
     return c.json(card, 200)
   } catch (error) {
     await umami.track("get_card_by_slug_controller_error", {
+      error: error instanceof Error ? error.message : "unknown",
+    })
+
+    return c.json({ error: "Internal server error", err: error }, 500)
+  }
+}
+
+interface Overload {
+  status?: string
+}
+
+export const getCardsByUser = async (
+  c: OptionalAuthContext,
+): Promise<Response> => {
+  const database = db
+
+  try {
+    await umami.track("get_cards_controller_started")
+
+    const userName = c.req.param("userName") ?? ""
+    const [user] = await database
+      .select()
+      .from(users)
+      .where(eq(users.username, userName))
+    const userId = user.id
+    let overload: Overload = { status: "publised" }
+
+    if (c?.user?.id === user.id || (c.user?.role ?? 0) > 1) {
+      overload = {}
+    }
+
+    // Const status = c.req.query("status")
+    const limit = parseInt(c.req.query("limit") ?? "100", 10)
+    const offset = parseInt(c.req.query("offset") ?? "0", 10)
+    const cards = await getCards({
+      ownerId: userId,
+      limit,
+      offset,
+      ...overload,
+    })
+
+    await umami.track("get_cards_controller_completed", {
+      cardsCount: cards.length.toString(),
+      // HasStatus: status ? "true" : "false",
+    })
+
+    return c.json(cards, 200)
+  } catch (error) {
+    await umami.track("get_cards_controller_error", {
       error: error instanceof Error ? error.message : "unknown",
     })
 

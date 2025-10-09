@@ -19,7 +19,7 @@ interface GetCardBySlugParams {
   role?: number
 }
 
-type CardWithTags = Card & {
+export type CardWithTags = Card & {
   tag1: Tag | null
   tag2: Tag | null
   comp1Tag: Tag | null
@@ -29,7 +29,6 @@ type CardWithTags = Card & {
   owner: User | null
   image: Image | null
 }
-
 const tag1 = alias(tags, "tag1")
 const tag2 = alias(tags, "tag2")
 const comp1Tag = alias(tags, "comp1Tag")
