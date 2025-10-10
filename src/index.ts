@@ -110,7 +110,7 @@ app.route("/tags", tags)
 app.route("/cards", cards)
 
 app.get("/@me", optionalAuthMiddleware, (c: OptionalAuthContext) =>
-  c.json({ succes: Boolean(c?.user?.username), username: c?.user?.username }),
+  c.json({ succes: Boolean(c?.user?.username), user: c?.user }),
 )
 
 // Serveur HTTP
