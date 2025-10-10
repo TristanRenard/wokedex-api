@@ -1,6 +1,10 @@
 import { Hono } from "hono"
 import { createServer } from "http"
 import type { AuthenticatedContext } from "./middleware/auth.js"
+import {
+  optionalAuthMiddleware,
+  type OptionalAuthContext,
+} from "./middleware/optionalAuth.js"
 import cards from "./routes/cards.js"
 import images from "./routes/images.js"
 import login from "./routes/login.js"
@@ -97,6 +101,10 @@ app.get("/images/:key", async (c) => {
 
 app.route("/tags", tags)
 app.route("/cards", cards)
+
+app.get("/@me", optionalAuthMiddleware, (c: OptionalAuthContext) =>
+  c.json({ succes: Boolean(c?.user?.username), username: c?.user?.username }),
+)
 
 // Serveur HTTP
 const server = createServer((req, res) => {
