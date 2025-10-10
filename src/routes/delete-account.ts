@@ -27,7 +27,7 @@ const deleteAccount = async (
 
     if (
       !user.verificationTokenExpiresAt ||
-      user.verificationTokenExpiresAt > new Date()
+      user.verificationTokenExpiresAt < new Date()
     ) {
       return c.json({ message: "expired Token" }, 400)
     }
