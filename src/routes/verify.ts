@@ -39,7 +39,7 @@ const verify = async (c: Context): Promise<HandlerResponse<number>> => {
       )
     }
 
-    return c.json({ message: "email sent" }, 200)
+    return c.json({ message: "connected" }, 200)
   } catch (error: unknown) {
     return c.json({ message: (error as Error).message }, 500)
   }

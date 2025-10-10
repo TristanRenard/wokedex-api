@@ -6,6 +6,7 @@ import {
   type OptionalAuthContext,
 } from "./middleware/optionalAuth.js"
 import cards from "./routes/cards.js"
+import deleteAccount from "./routes/delete-account.js"
 import images from "./routes/images.js"
 import login from "./routes/login.js"
 import reindex, {
@@ -63,6 +64,12 @@ app.post("/verify", async (c) => {
   await umami.track("verification_attempt")
 
   return verify(c)
+})
+
+app.post("/delete", authMiddleware, async (c) => {
+  await umami.track("DeleteAccount_attempt")
+
+  return deleteAccount(c as unknown as AuthenticatedContext)
 })
 
 //@ts-expect-error upload

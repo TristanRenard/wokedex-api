@@ -46,7 +46,7 @@ const loginController = async (
           },
           {
             key: "changeUsernameURL",
-            value: `${process.env.FRONTEND_URL}/set-username/${verificationToken}`,
+            value: `${process.env.FRONTEND_URL}/change-username/${verificationToken}`,
           },
           {
             key: "deleteAccountURL",
