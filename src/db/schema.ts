@@ -1,5 +1,12 @@
 import { sql } from "drizzle-orm"
-import { integer, json, pgTable, text, timestamp } from "drizzle-orm/pg-core"
+import {
+  boolean,
+  integer,
+  json,
+  pgTable,
+  text,
+  timestamp,
+} from "drizzle-orm/pg-core"
 
 export const users = pgTable("users", {
   id: text("id")
@@ -33,6 +40,7 @@ export const images = pgTable("images", {
     .primaryKey()
     .default(sql`gen_random_uuid()`),
   url: text("url").notNull(),
+  approved: boolean("approved").notNull().default(false),
   keywords: text("keywords").array().default([]),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
