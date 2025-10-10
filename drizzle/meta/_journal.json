@@ -57,6 +57,13 @@
       "when": 1753870799538,
       "tag": "0007_bizarre_talkback",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1760056157379,
+      "tag": "0008_bright_shen",
+      "breakpoints": true
     }
   ]
 }
