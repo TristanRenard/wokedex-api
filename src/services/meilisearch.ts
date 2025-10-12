@@ -335,8 +335,13 @@ export const searchCards = async (
     })
 
     const index = meilisearchClient.index(CARDS_INDEX_NAME)
+    // Construction du filtre en gérant le cas où filters est undefined
+    const statusFilter = "status = published"
+    const combinedFilters = filters
+      ? `${statusFilter} AND ${filters}`
+      : statusFilter
     const searchResult = await index.search(query, {
-      filter: filters,
+      filter: combinedFilters,
       limit,
       sort: ["createdAt:desc"],
     })
@@ -352,6 +357,7 @@ export const searchCards = async (
       estimatedTotalHits: searchResult.estimatedTotalHits,
     }
   } catch (error) {
+    console.error(error)
     await umami.track("meilisearch_search_cards_error", {
       error: error instanceof Error ? error.message : "unknown",
       query: query === "*" ? "all" : query.substring(0, 50),

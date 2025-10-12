@@ -1,5 +1,5 @@
 import type { Context, Next } from "hono"
-import { getCookie } from "hono/cookie"
+import { getCookie, getSignedCookie } from "hono/cookie"
 import jwt from "jsonwebtoken"
 import type { User } from "../db/schema.js"
 import umami from "../umami.js"
@@ -15,6 +15,9 @@ export const optionalAuthMiddleware = async (
 ): Promise<void> => {
   try {
     await umami.track("optional_auth_middleware_started")
+
+    console.log(await getSignedCookie(c, process.env.SECRET as string))
+    console.log(getCookie(c, "wokedexSession"))
 
     const sessionToken = getCookie(c, "wokedexSession")
 

@@ -205,7 +205,7 @@ export const getCardBySlugController = async (
         error: "card_not_found",
       })
 
-      return c.json({ error: "Card not found" }, 404)
+      return c.json({ error: "Card not found", user: c?.user, slug }, 404)
     }
 
     await umami.track("get_card_by_slug_controller_completed", {

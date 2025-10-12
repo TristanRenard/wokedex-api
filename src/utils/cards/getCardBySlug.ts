@@ -77,6 +77,8 @@ const getCardBySlug = async ({
     if (role >= 2) {
       result = await baseQuery.where(eq(cards.slug, slug)).limit(1)
     } else if (userId) {
+      result = await baseQuery.where(eq(cards.slug, slug)).limit(1)
+    } else {
       result = await baseQuery
         .where(
           and(
@@ -84,10 +86,6 @@ const getCardBySlug = async ({
             or(eq(cards.ownerId, userId), eq(cards.status, "published")),
           ),
         )
-        .limit(1)
-    } else {
-      result = await baseQuery
-        .where(and(eq(cards.slug, slug), eq(cards.status, "published")))
         .limit(1)
     }
 
