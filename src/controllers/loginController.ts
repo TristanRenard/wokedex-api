@@ -34,8 +34,6 @@ const loginController = async (
       const { verificationToken } = await createToken(user.hash, db)
       await umami.track("verification_token_created", { success: "true" })
 
-      console.log("send email")
-
       await sendEmail({
         email,
         subject: "Welcome to Wokedex",

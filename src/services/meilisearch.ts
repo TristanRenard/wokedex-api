@@ -326,7 +326,7 @@ export const searchCards = async (
   query: string,
   filters?: string,
   limit: number = 20,
-): Promise<{ hits: CardDocument[]; estimatedTotalHits: number }> => {
+): Promise<{ hits: CardDocument[]; estimatedTotalHits: number } | null> => {
   try {
     await umami.track("meilisearch_search_cards_started", {
       query: query === "*" ? "all" : query.substring(0, 50),
@@ -357,12 +357,14 @@ export const searchCards = async (
       estimatedTotalHits: searchResult.estimatedTotalHits,
     }
   } catch (error) {
-    console.error(error)
     await umami.track("meilisearch_search_cards_error", {
       error: error instanceof Error ? error.message : "unknown",
       query: query === "*" ? "all" : query.substring(0, 50),
     })
-    throw error
+    // eslint-disable-next-line no-console
+    console.error(error)
+
+    return null
   }
 }
 
