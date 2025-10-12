@@ -248,13 +248,14 @@ const updateCard = async ({
     if (title !== undefined || username !== undefined) {
       const newTitle = title ?? currentCard.title
       let newUsername = username
+      let owner = null
 
       if (!newUsername) {
         if (!currentCard.ownerId) {
           throw new Error("Card has no owner")
         }
 
-        const owner = await getUserById(currentCard.ownerId)
+        owner = await getUserById(currentCard.ownerId)
 
         if (!owner?.username) {
           throw new Error("Owner user not found or has no username")
@@ -263,7 +264,11 @@ const updateCard = async ({
         newUsername = owner.username
       }
 
-      if (newTitle && newUsername) {
+      if (
+        newTitle &&
+        newUsername &&
+        (newTitle !== currentCard.title || currentCard.ownerId !== owner?.id)
+      ) {
         const newSlug = await generateUniqueSlug(newUsername, newTitle, cardId)
         updateData.slug = newSlug
         updateData.title = newTitle
