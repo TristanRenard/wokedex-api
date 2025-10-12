@@ -22,12 +22,12 @@ export const searchCardsController = async (c: Context): Promise<Response> => {
 
     await umami.track("search_cards_controller_completed", {
       query: query === "*" ? "all" : query.substring(0, 50),
-      resultsCount: cards.hits.length.toString(),
+      resultsCount: cards?.hits.length ?? 0,
       hasFilters: filters ? "true" : "false",
     })
 
     return c.json(
-      { cards: cards.hits, estimatedTotalHits: cards.estimatedTotalHits },
+      { cards: cards?.hits, estimatedTotalHits: cards?.estimatedTotalHits },
       200,
     )
   } catch (error) {

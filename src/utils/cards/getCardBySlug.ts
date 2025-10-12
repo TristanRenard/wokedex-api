@@ -83,7 +83,9 @@ const getCardBySlug = async ({
         .where(
           and(
             eq(cards.slug, slug),
-            or(eq(cards.ownerId, userId), eq(cards.status, "published")),
+            userId
+              ? or(eq(cards.ownerId, userId), eq(cards.status, "published"))
+              : eq(cards.status, "published"),
           ),
         )
         .limit(1)
