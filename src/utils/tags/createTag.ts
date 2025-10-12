@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import type { NodePgDatabase } from "drizzle-orm/node-postgres"
-import { db as dbInstance } from "../../db/index.js"
+import { db } from "../../db/index.js"
 import type * as schema from "../../db/schema.js"
 import { tags, type NewTag, type Tag } from "../../db/schema.js"
 import umami from "../../umami.js"
@@ -20,8 +20,6 @@ const createTag = async ({
   style = {},
   database,
 }: CreateTagParams): Promise<Tag> => {
-  const db = database ?? dbInstance
-
   // Debug: Log des paramètres d'entrée
   if (process.env.NODE_ENV !== "production") {
     console.log("[CreateTag Debug] Function called with params:", {
