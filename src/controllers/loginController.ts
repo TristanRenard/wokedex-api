@@ -40,10 +40,9 @@ const loginController = async (
         params: [
           {
             key: "verifyURL",
-            value:
-              existingUser && user?.username
-                ? `${process.env.FRONTEND_URL}/verify/${verificationToken}`
-                : `${process.env.FRONTEND_URL}/set-username/${verificationToken}`,
+            value: user?.username
+              ? `${process.env.FRONTEND_URL}/verify/${verificationToken}`
+              : `${process.env.FRONTEND_URL}/set-username/${verificationToken}`,
           },
           {
             key: "changeUsernameURL",
