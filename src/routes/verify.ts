@@ -20,6 +20,7 @@ const verify = async (c: Context): Promise<HandlerResponse<number>> => {
         secure: true,
         sameSite: "none",
         maxAge: 60 * 60 * 24,
+        domain: process.env.DOMAIN,
         path: "/",
       })
     } else {
