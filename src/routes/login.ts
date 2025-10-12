@@ -9,10 +9,10 @@ const login = async (c: Context): Promise<HandlerResponse<number>> => {
     return c.json({ message: "email is required" }, 400)
   }
 
-  const verificationToken = await loginController({ email, username })
+  await loginController({ email, username })
 
   if (process.env.NODE_ENV === "development") {
-    return c.json({ message: "email sent", verificationToken })
+    return c.json({ message: "email sent" })
   }
 
   return c.json({ message: "email sent" })
