@@ -21,6 +21,33 @@ export const processImage = async (
       originalSize: buffer.length.toString(),
     })
 
+    // Pour les GIFs, on les retourne tels quels sans traitement Sharp
+    // car Sharp détruit l'animation lors du traitement
+    if (originalMimeType === "image/gif") {
+      await umami.track("image_processor_gif_passthrough", {
+        size: buffer.length.toString(),
+      })
+
+      return {
+        buffer,
+        mimeType: "image/gif",
+        extension: "gif",
+      }
+    }
+
+    // Pour les SVG, on les retourne aussi tels quels
+    if (originalMimeType === "image/svg+xml") {
+      await umami.track("image_processor_svg_passthrough", {
+        size: buffer.length.toString(),
+      })
+
+      return {
+        buffer,
+        mimeType: "image/svg+xml",
+        extension: "svg",
+      }
+    }
+
     let sharpInstance = sharp(buffer)
 
     await umami.track("image_processor_reading_metadata")
@@ -32,6 +59,7 @@ export const processImage = async (
     }
 
     const { width, height } = metadata
+
     await umami.track("image_processor_metadata_loaded", {
       originalWidth: width.toString(),
       originalHeight: height.toString(),
@@ -104,20 +132,6 @@ export const processImage = async (
           .toBuffer()
         mimeType = "image/webp"
         extension = "webp"
-
-        break
-
-      case "image/gif":
-        processedBuffer = await sharpInstance.gif().toBuffer()
-        mimeType = "image/gif"
-        extension = "gif"
-
-        break
-
-      case "image/svg+xml":
-        processedBuffer = buffer
-        mimeType = "image/svg+xml"
-        extension = "svg"
 
         break
 
