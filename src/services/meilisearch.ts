@@ -32,7 +32,7 @@ export interface CardDocument {
   slug: string
   title: string
   status: string
-  level: number
+  level: string
   talent: string | null
   object: string | null
   pv: number

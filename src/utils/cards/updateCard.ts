@@ -13,7 +13,7 @@ interface UpdateCardParams {
   title?: string
   username?: string
   status?: string
-  level?: number
+  level?: string
   tag1?: string
   tag2?: string
   talent?: string
@@ -288,7 +288,7 @@ const updateCard = async ({
         slug: updatedCard.slug,
         title: updatedCard.title ?? "",
         status: updatedCard.status ?? "draft",
-        level: updatedCard.level ?? 0,
+        level: updatedCard.level ?? "0",
         talent: updatedCard.talent,
         object: updatedCard.object,
         pv: updatedCard.pv ?? 0,
