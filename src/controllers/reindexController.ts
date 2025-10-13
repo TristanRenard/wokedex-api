@@ -114,7 +114,7 @@ const reindexController = async (
           slug: card.slug,
           title: card.title ?? "",
           status: card.status ?? "draft",
-          level: card.level ?? 0,
+          level: card.level ?? "0",
           talent: card.talent,
           object: card.object,
           pv: card.pv ?? 0,

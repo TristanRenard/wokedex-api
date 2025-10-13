@@ -54,7 +54,7 @@ export const cards = pgTable("cards", {
   slug: text("slug").notNull().unique(),
   status: text("status").notNull().default("draft"),
   title: text("title"),
-  level: integer("level").default(0),
+  level: text("level").default("0"),
   tag1: text("tag1").references(() => tags.id),
   tag2: text("tag2").references(() => tags.id),
   talent: text("talent"),
