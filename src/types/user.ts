@@ -6,6 +6,4 @@ interface UnpreparedUser {
   email: string
 }
 
-
 export type { Hash, UnpreparedUser, VerificationToken }
-

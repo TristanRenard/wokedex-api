@@ -2,6 +2,3 @@
 
 echo "🔍 Exécution du lint-staged..."
 npx lint-staged
-
-echo "🧪 Exécution des tests..."
-pnpm test:run

@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+echo "🧪 Exécution des tests..."
+pnpm test:run

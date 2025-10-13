@@ -1,0 +1,1 @@
+ALTER TABLE "images" ADD COLUMN "approved" boolean DEFAULT false NOT NULL;

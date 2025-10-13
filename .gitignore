@@ -15,6 +15,7 @@ node_modules/
 # env
 .env
 .env.production
+remote.env
 
 # logs
 logs/
@@ -24,6 +25,9 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+
+# dist
+dist/
 
 # lint-staged
 .lintstagedrc*
@@ -35,3 +39,7 @@ lerna-debug.log*
 
 # test
 coverage/
+localhost.key
+localhost.crt
+origin.pem
+origin.key
