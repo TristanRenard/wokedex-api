@@ -9,7 +9,7 @@ interface CreateCardParams {
   ownerId: string
   username: string
   status?: string
-  level?: number
+  level?: string
   tag1?: string
   tag2?: string
   talent?: string
@@ -87,7 +87,7 @@ const createCard = async ({
   ownerId,
   username,
   status = "draft",
-  level = 0,
+  level = "0",
   tag1,
   tag2,
   talent,
@@ -164,7 +164,7 @@ const createCard = async ({
       slug: createdCard.slug,
       title: createdCard.title ?? "",
       status: createdCard.status ?? "draft",
-      level: createdCard.level ?? 0,
+      level: createdCard.level ?? "0",
       talent: createdCard.talent,
       object: createdCard.object,
       pv: createdCard.pv ?? 0,
