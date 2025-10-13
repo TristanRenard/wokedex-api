@@ -1,7 +1,7 @@
 /* eslint-disable complexity */
-import { and, sql } from "drizzle-orm"
+import { and, eq, sql } from "drizzle-orm"
 import { db } from "../../db/index.js"
-import { cards, type Card } from "../../db/schema.js"
+import { cards, images, type Card, type Image } from "../../db/schema.js"
 import { indexCard, type CardDocument } from "../../services/meilisearch.js"
 import umami from "../../umami.js"
 import getUserById from "../users/getUserById.js"
@@ -280,6 +280,14 @@ const updateCard = async ({
       .set(updateData)
       .where(sql`${cards.id} = ${cardId}`)
       .returning()
+    let image: Image | null = null
+
+    if (updatedCard?.imageId) {
+      ;[image] = await db
+        .select()
+        .from(images)
+        .where(eq(images.id, updatedCard.imageId))
+    }
 
     try {
       const owner = await getUserById(updatedCard.ownerId ?? "")
@@ -303,6 +311,7 @@ const updateCard = async ({
         degen: updatedCard.degen ?? 0,
         ownerId: updatedCard.ownerId ?? "",
         ownerUsername: owner?.username ?? "",
+        image,
         createdAt:
           updatedCard.createdAt?.toISOString() ?? new Date().toISOString(),
         updatedAt:
